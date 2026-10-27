@@ -1,0 +1,13 @@
+{
+  "name": "beautifully-broken",
+  "version": "0.1.0",
+  "description": "Beautifully Broken — Designing for Cognitive Friction. A transparent, editable idea machine for a design-thinking workshop.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "test": "node --test tests/*.test.js",
+    "build": "node scripts/build.mjs"
+  },
+  "license": "UNLICENSED"
+}
