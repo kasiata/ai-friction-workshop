@@ -92,6 +92,7 @@ export const A = {
     if (!first) { toast('New session started. The previous one is no longer stored in this browser.'); emit(); }
   },
   ui(patch) { Object.assign(S.ui, patch); emit(); },
+  view(id) { S.currentId = id; S.ui.reproduce = null; persist(); emit(); },
   draft(key, value) { S.ui.drafts[key] = value; }, // silent: no re-render while typing
 
   // ---------- design question

@@ -49,7 +49,7 @@ export function historyPanel() {
         h('div', { class: 'gen-main' }, h('small', null, `#${g.n} · ${formatElapsed(g.t)} · stage ${g.stage} · ${g.config.process.name.split(' ·')[0]} · ${g.config.params.mode} · seed ${g.seed}`),
           h('div', { class: 'gen-text' }, g.saved && '★ ', g.proposition, g.config.rules.filter((r) => r.enabled !== false).length > 0 && h('span', { class: 'badge' }, `${g.config.rules.filter((r) => r.enabled !== false).length} rule(s)`))),
         h('div', { class: 'gen-btns' },
-          h('button', { class: 'btn ghost sm', onclick: () => A.ui({ currentId: g.id, reproduce: null }) }, 'View'),
+          h('button', { class: 'btn ghost sm', onclick: () => A.view(g.id) }, 'View'),
           h('button', { class: 'btn ghost sm', title: 'Restore configuration and learned state from before this idea', onclick: () => A.restore(g.id) }, 'Restore'),
           h('button', { class: 'btn ghost sm', disabled: !cur || cur.id === g.id, onclick: () => { const [a, b] = g.n < cur.n ? [g, cur] : [cur, g]; A.compare(a.id, b.id); } }, 'Compare'),
           h('button', { class: 'btn ghost sm', onclick: () => A.toggleSave(g.id) }, g.saved ? '★' : '☆')))) : h('p', { class: 'hint' }, 'Nothing here yet.')),

@@ -31,12 +31,28 @@ function buildRule() {
   }
 }
 
+function previewText() {
+  const rule = buildRule();
+  const errors = validateRule(rule, S.config.memory);
+  const blocked = rule.type === 'set_params' && isLocked('probability');
+  return { rule, errors, blocked, text: errors.length ? errors[0] : describeRule(rule) + (blocked ? ' — ' + isLocked('probability') : '') };
+}
+function refreshPreview() {
+  const el = document.querySelector('.preview .pv-text');
+  if (!el) return;
+  const p = previewText();
+  el.textContent = p.text;
+  el.parentElement.classList.toggle('bad', !!(p.errors.length || p.blocked));
+  const b = document.getElementById('apply-rule');
+  if (b) b.disabled = !!(p.errors.length || p.blocked);
+}
+
 const sel = (value, options, onchange, label) => h('select', { 'aria-label': label, value, onchange: (e) => onchange(e.target.value) }, options.map(([v, l]) => h('option', { value: v }, l)));
 
 function ruleForm() {
   const t = tpl(), d = draft();
   const f = fieldsFor(t);
-  const set = (patch, rerender = true) => { Object.assign(d.fields, patch); if (rerender) A.ui({}); };
+  const set = (patch, rerender = true) => { Object.assign(d.fields, patch); if (rerender) A.ui({}); else refreshPreview(); };
   const bankOpts = BANK_KEYS.map((b) => [b, BANKS[b].title]);
   const labelOpts = (bank) => S.config.memory[bank].map((i) => [i.label, i.label]);
   const L = (text, el) => h('label', { class: 'f' }, h('span', null, text), el);
@@ -107,9 +123,9 @@ export function interventionPanel() {
             S.ui.nl.proposals?.map(proposalCard),
             S.ui.nl.proposals?.length > 0 && h('p', { class: 'tiny' }, 'Nothing is applied until you confirm below.'))),
         rule && h('div', { class: 'preview ' + (errors.length || blocked ? 'bad' : '') },
-          h('strong', null, 'Proposed change: '), errors.length ? errors[0] : describeRule(rule), blocked && ' — ' + lockedP),
-        h('div', { class: 'row' }, h('button', { class: 'btn primary', disabled: !g || errors.length > 0 || blocked,
-          onclick: () => A.applyIntuitionRule({ genId: g.id, interest: interest.value, ruleText: ruleText.value, rule }) }, 'Confirm and apply rule'))),
+          h('strong', null, 'Proposed change: '), h('span', { class: 'pv-text' }, errors.length ? errors[0] : describeRule(rule) + (blocked ? ' — ' + lockedP : ''))),
+        h('div', { class: 'row' }, h('button', { class: 'btn primary', id: 'apply-rule', disabled: !g || errors.length > 0 || blocked,
+          onclick: () => A.applyIntuitionRule({ genId: g.id, interest: interest.value, ruleText: ruleText.value, rule: previewText().rule }) }, 'Confirm and apply rule'))),
     ),
     after && h('div', { class: 'msg ok', role: 'status' },
       h('strong', null, 'Rule applied and linked to idea #', genById(after.genId)?.n, '. '), 'Generate again and look for “rule:” factors in the trace.',

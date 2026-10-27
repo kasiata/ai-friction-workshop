@@ -44,13 +44,13 @@ function render() {
   const scroll = window.scrollY;
   const keepFocus = document.activeElement?.getAttribute?.('aria-label');
   const toastEl = S.ui.toast && h('div', { class: 'toast ' + S.ui.toast.kind, role: 'status', onclick: () => A.ui({ toast: null }) }, S.ui.toast.msg);
-  app.replaceChildren(
+  app.replaceChildren(...[
     header(), aboutPanel(), researchPanel(), questionBar(), workshopBar(),
     h('main', { class: 'grid' }, controls(), resultPanel()),
     h('div', { class: 'lower' }, interventionPanel(), historyPanel()),
     reflectBar(),
     h('footer', { class: 'foot' }, 'Beautifully Broken · prototype v0.1 · Inholland Design Doing Symposium · all data stays in this browser'),
-    toastEl);
+    toastEl].filter(Boolean));
   window.scrollTo(0, scroll);
   void keepFocus;
 }
