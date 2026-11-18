@@ -1,6 +1,8 @@
 # Breaking the Prompt — AI-friction workshop
 
-Live workshop: https://kasiata.github.io/ai-friction-workshop/
+Live workshop (language choice): https://kasiata.github.io/ai-friction-workshop/
+
+Choose **English** or **Nederlands** on the entry page. Both language versions include both exercises, editable examples, instructions, errors, the manual ChatGPT interpretation prompt and a printable A4. Language links inside each exercise preserve the exercise number. Participant-entered text is not automatically translated.
 
 Two Dutch exercises based on Kasia Głowicka's presentation:
 
@@ -11,7 +13,7 @@ Each collection has six independent selection models: uniform, normal, exponenti
 
 ## Analysis and documents
 
-Type text or load TXT, Markdown or DOCX (main document text; up to 5 MB / 50,000 characters). For PDF, paste extracted text. Documents are processed locally in the browser. The complete source is not automatically stored or uploaded. Approved generator collections persist in local browser storage. Exercise 1 and 2 use separate storage keys.
+Type text or load TXT, Markdown or DOCX (main document text; up to 5 MB / 50,000 characters). For PDF, paste extracted text. Documents are processed locally in the browser. The complete source is not automatically stored or uploaded. Approved generator collections persist in local browser storage. Each exercise and language uses a separate browser storage key. Dutch retains the previous keys for compatibility; English uses an `-en` suffix. Switching languages starts from that language's own saved system or defaults, not an automatic translation of participant data.
 
 Transparent extraction counts word occurrences and word pairs within five content words in a sentence, once per pair per sentence, among the 32 most frequent content words. These observations are included in the prepared ChatGPT prompt; frequency does not automatically become importance or selection weight.
 
@@ -19,14 +21,17 @@ LLM interpretation currently uses **manual copy-and-return**: copy the prompt to
 
 ## Files
 
-- `index.html`: exercise 1.
+- `index.html`: ENG / NL language choice.
+- `nl/` and `en/`: complete Dutch and English workshop pages and runtime modules.
+- `workshop.html`: canonical Dutch exercise 1 source.
+- `scripts/localize.py` and `scripts/translations.json`: deterministic language generation using Python 3 (standard library only).
 - `oefening-2.html`: exercise 2.
 - `werkblad.html`: editable A4, including the current GitHub Pages address.
-- `werkblad-a4.pdf`: one-page printable PDF.
+- `werkblad-a4.pdf` and `worksheet-a4-en.pdf`: Dutch and English one-page printable PDFs.
 - `assets/qr-*.svg`: four original vector QR codes.
 - `engine.mjs`, `analysis.mjs`, `document.mjs`: generator, text analysis and document extraction.
 
-The workshop has no build-time dependencies. All runtime URLs are relative, so it works under a GitHub Pages project path.
+The workshop has no npm package dependencies. Regenerating the language versions requires Python 3; the optional English PDF generator also requires ReportLab and DejaVu fonts. Both PDFs and the generated language pages are checked in. All runtime URLs are relative, so it works under a GitHub Pages project path.
 
 ## Local development and checks
 
@@ -36,7 +41,7 @@ npm test
 npm run build
 ```
 
-`npm start` serves the root at http://localhost:5173. Tests include the current workshop modules and the earlier prototype's retained engine checks. `npm run build` packages the current workshop in `dist/`.
+`npm start` serves the root at http://localhost:5173. Tests include the current workshop modules and the earlier prototype's retained engine checks. `npm run build` regenerates EN/NL pages from the canonical Dutch HTML/JS and translation dictionary, then packages both languages and the entry page in `dist/`. After editing canonical source, run it and commit the generated `en/` and `nl/` changes because branch-based Pages serves checked-in files.
 
 ## GitHub Pages
 
