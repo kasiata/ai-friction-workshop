@@ -1,7 +1,7 @@
-import {defaults} from './engine.mjs?v=e1f10836e248';
-import {saveTransfer} from './transfer.mjs?v=e1f10836e248';
-import {localAnalysis,parseAnalysis,quoteExists,buildPrompt,systemFromReview,checkSource} from './analysis.mjs?v=e1f10836e248';
-import {readDocument} from './document.mjs?v=e1f10836e248';
+import {defaults} from './engine.mjs?v=f801ab4c1c3b';
+import {saveTransfer} from './transfer.mjs?v=f801ab4c1c3b';
+import {localAnalysis,parseAnalysis,quoteExists,buildPrompt,systemFromReview,checkSource} from './analysis.mjs?v=f801ab4c1c3b';
+import {readDocument} from './document.mjs?v=f801ab4c1c3b';
 const $=id=>document.getElementById(id);let analysis=null,analysedSource='',loadId=0;
 const report=message=>$('analysisError').textContent=message;
 function invalidate(){analysis=null;$('textStatistics').hidden=true;$('prompt').value='';$('promptDetails').open=false;$('review').hidden=true;$('approveAnalysis').disabled=true;$('sourceStatus').textContent=`${$('sourceText').value.length.toLocaleString('nl-NL')} / 50.000`;}

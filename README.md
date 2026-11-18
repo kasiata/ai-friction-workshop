@@ -51,3 +51,8 @@ No workshop source documents or participant records are committed or collected. 
 
 ## Concise analysis and generator handoff
 Exercise 1 uses a warm tint; Exercise 2 uses a cool green tint. Exercise 2 no longer duplicates the generator. Its primary flow is source → visible keyword/co-occurrence bars → editable collections → **Use in Exercise 1**. Quotes, templates, optional connection rules and the manual ChatGPT workflow are in expandable sections. The handoff carries the reviewed challenge, collections, custom weights, template and approved rule, along with a baseline for same-seed comparison. Validation runs before storage or navigation. The source document and raw analysis response are not included in the handoff. The generator saves the resulting ingredients in local browser storage as before.
+
+## Editorial design and vocabulary
+The approved visual design uses charcoal, magenta, serif headings and neutral gradients (parchment for the generator, warm grey for text analysis). Each collection now groups its editable ingredients, selection model, probability profile and optional model parameters. Connection settings are collapsed. The header has one language switch.
+
+`begrippen.html` and its generated EN/NL versions explain the controls, all six models, analysis terms, the manual ChatGPT flow and cognitive friction. The hidden numeric seed is presented as **Keep randomness fixed**: checked repeats the current draw sequence, unchecked draws a new seed for each generation. **New draw** refreshes the fixed sequence. Saved state retains the hidden seed for reproducibility; `fixedRandomness` is optional and defaults to true for existing or transferred systems. No new probability model or generator algorithm was introduced.

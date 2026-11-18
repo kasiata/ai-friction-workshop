@@ -1,4 +1,4 @@
-import {normalize,validate,generate} from './engine.mjs?v=e1f10836e248';
+import {normalize,validate,generate} from './engine.mjs?v=f801ab4c1c3b';
 export function transferKey(language="nl"){return 'breaking-prompt-transfer-'+(language==="en"?"en":"nl");}
 export function validateTransfer(payload){
  if(!payload||payload.version!==1||!payload.system||!payload.baselineSystem)throw Error('Ongeldige overdracht. Analyseer je tekst opnieuw.');

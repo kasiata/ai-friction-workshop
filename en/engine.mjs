@@ -1,5 +1,5 @@
 export const selectionDefaults={model:'uniform',center:0.5,spread:0.2,rate:2,exponent:1.2,direction:'start',weights:[]};
-export const models={uniform:'Uniform',normal:"Normal",exponential:"Exponential",zipf:'Zipf',triangular:"Triangular",custom:"Custom weights"};
+export const models={uniform:"Uniform",normal:"Normal",exponential:"Exponential",zipf:'Zipf',triangular:"Triangular",custom:"Custom weights"};
 export const defaults={version:3,challenge:"Design a place on campus where strangers feel comfortable starting a conversation.",labels:["Spatial elements","Activities","Qualities"],groups:[["a circular bench","a movable wall","a shared table","a sheltered nook","an open stage"],["share a personal story","build something together","share food","exchange a question","draw together"],["playful","quiet","surprising","welcoming","energetic"]],selections:Array.from({length:3},()=>structuredClone(selectionDefaults)),recipe:'abc',template:"A place with {A}, where people {B}. The atmosphere is {C}.",rule:{enabled:false,trigger:"share a personal story",allowed:["quiet","welcoming"]},lines:4,seed:42};
 export function normalize(s){
  if(!s) return structuredClone(defaults);
