@@ -1,4 +1,5 @@
-import {defaults,normalize,validate,generate,distribution,models} from './engine.mjs';
+import {takeTransfer} from './transfer.mjs?v=e1f10836e248';
+import {defaults,normalize,validate,generate,distribution,models} from './engine.mjs?v=e1f10836e248';
 const $=id=>document.getElementById(id);let current=null,baseline=null,count=0;const isSecond=document.body.dataset.exercise==='2';const key=isSecond?'breaking-prompt-ex2-system-en':'breaking-prompt-v2-en';
 const list=text=>text.split('\n').map(x=>x.trim()).filter(Boolean);
 function read(){return {version:3,challenge:$('challenge').value,labels:[0,1,2].map(i=>$('label'+i).value),groups:[0,1,2].map(i=>list($('g'+i).value)),selections:[0,1,2].map(readSelection),recipe:'abc',template:$('template').value,rule:{enabled:$('ruleEnabled').checked,trigger:$('ruleTrigger').value,allowed:list($('ruleAllowed').value)},lines:Number($('lines').value),seed:Number($('seed').value)};}
@@ -39,3 +40,8 @@ let saved;try{saved=validate(normalize(JSON.parse(localStorage.getItem(key))));}
 
 tab(isSecond?2:1);
 if(isSecond){if(!saved){try{const first=JSON.parse(localStorage.getItem('breaking-prompt-v2-en'));if(first?.challenge)$('challenge').value=first.challenge;}catch{}}}
+
+if(!isSecond&&new URLSearchParams(window.location.search).get('from')==='analysis'){
+ try{const transferred=takeTransfer(sessionStorage,document.documentElement.lang);if(transferred){window.dispatchEvent(new CustomEvent('workshop:load-system',{detail:transferred}));$('transferNotice').hidden=false;$('transferNotice').textContent="System from Exercise 2 loaded. You can now generate and compare.";const url=new URL(window.location.href);url.searchParams.delete('from');history.replaceState(null,'',url);}}
+ catch(e){$('error').textContent=e.message;}
+}

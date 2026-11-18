@@ -4,7 +4,7 @@ from html.parser import HTMLParser
 import html,json,re,hashlib
 ROOT=Path(__file__).resolve().parent.parent
 D=json.loads((ROOT/'scripts/translations.json').read_text())
-REV=hashlib.sha256(b''.join((ROOT/name).read_bytes() for name in ['style.css','workshop.html','oefening-2.html','werkblad.html','scripts/translations.json'])).hexdigest()[:12]
+REV=hashlib.sha256(b''.join((ROOT/name).read_bytes() for name in ['app.mjs','exercise2.mjs','transfer.mjs','style.css','workshop.html','oefening-2.html','werkblad.html','scripts/translations.json'])).hexdigest()[:12]
 
 def js(source):
     # Translate full template literals before their individual string components.
@@ -70,16 +70,20 @@ for lang in ['nl','en']:
         switch=f'<a class="language-switch" href="../{other}/{name}" lang="{other}">{label}</a><a class="language-switch" href="../">ENG / NL</a>'
         if '<nav>' in text:text=text.replace('<nav>','<nav>'+switch,1)
         else:text=text.replace('<div class="toolbar">','<div class="toolbar">'+switch,1)
+        text=re.sub(r'src="(app|exercise2)\.mjs"',lambda m:'src="'+m.group(1)+'.mjs?v='+REV+'"',text)
+        text=re.sub(r'(from\s*[\"\'])(\./[^\"\']+\.mjs)([\"\'])',lambda m:m.group(1)+m.group(2)+'?v='+REV+m.group(3),text)
         text=text.replace('href="./"','href="./?v='+REV+'"').replace('href="oefening-2.html"','href="oefening-2.html?v='+REV+'"')
         text=re.sub(r'href="(\.\./(?:en|nl)/[^"]*?\.html)"',lambda m:'href="'+m.group(1)+'?v='+REV+'"',text)
         (target/name).write_text(text)
-    for name in ['app.mjs','engine.mjs','analysis.mjs','document.mjs','exercise2.mjs']:
+    for name in ['app.mjs','engine.mjs','analysis.mjs','document.mjs','exercise2.mjs','transfer.mjs']:
         text=(ROOT/name).read_text()
         if lang=='en':
             text=js(text)
             if name=='analysis.mjs':
                 a=text.index('export function buildPrompt(');b=text.index('export function systemFromReview(',a)
                 text=text[:a]+english_prompt()+text[b:]
+        text=re.sub(r'src="(app|exercise2)\.mjs"',lambda m:'src="'+m.group(1)+'.mjs?v='+REV+'"',text)
+        text=re.sub(r'(from\s*[\"\'])(\./[^\"\']+\.mjs)([\"\'])',lambda m:m.group(1)+m.group(2)+'?v='+REV+m.group(3),text)
         text=text.replace('href="./"','href="./?v='+REV+'"').replace('href="oefening-2.html"','href="oefening-2.html?v='+REV+'"')
         text=re.sub(r'href="(\.\./(?:en|nl)/[^"]*?\.html)"',lambda m:'href="'+m.group(1)+'?v='+REV+'"',text)
         (target/name).write_text(text)

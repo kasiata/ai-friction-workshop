@@ -1,3 +1,4 @@
+import {takeTransfer} from './transfer.mjs';
 import {defaults,normalize,validate,generate,distribution,models} from './engine.mjs';
 const $=id=>document.getElementById(id);let current=null,baseline=null,count=0;const isSecond=document.body.dataset.exercise==='2';const key=isSecond?'breaking-prompt-ex2-system':'breaking-prompt-v2';
 const list=text=>text.split('\n').map(x=>x.trim()).filter(Boolean);
@@ -39,3 +40,8 @@ let saved;try{saved=validate(normalize(JSON.parse(localStorage.getItem(key))));}
 
 tab(isSecond?2:1);
 if(isSecond){if(!saved){try{const first=JSON.parse(localStorage.getItem('breaking-prompt-v2'));if(first?.challenge)$('challenge').value=first.challenge;}catch{}}}
+
+if(!isSecond&&new URLSearchParams(window.location.search).get('from')==='analysis'){
+ try{const transferred=takeTransfer(sessionStorage,document.documentElement.lang);if(transferred){window.dispatchEvent(new CustomEvent('workshop:load-system',{detail:transferred}));$('transferNotice').hidden=false;$('transferNotice').textContent='Systeem uit oefening 2 geladen. Je kunt nu genereren en vergelijken.';const url=new URL(window.location.href);url.searchParams.delete('from');history.replaceState(null,'',url);}}
+ catch(e){$('error').textContent=e.message;}
+}

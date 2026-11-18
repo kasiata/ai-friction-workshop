@@ -13,7 +13,7 @@ Each collection has six independent selection models: uniform, normal, exponenti
 
 ## Analysis and documents
 
-Type text or load TXT, Markdown or DOCX (main document text; up to 5 MB / 50,000 characters). For PDF, paste extracted text. Documents are processed locally in the browser. The complete source is not automatically stored or uploaded. Approved generator collections persist in local browser storage. Each exercise and language uses a separate browser storage key. Dutch retains the previous keys for compatibility; English uses an `-en` suffix. Switching languages starts from that language's own saved system or defaults, not an automatic translation of participant data.
+Type text or load TXT, Markdown or DOCX (main document text; up to 5 MB / 50,000 characters). For PDF, paste extracted text. Documents are processed locally in the browser. The complete source is not automatically stored or uploaded. Approved generator collections persist in local browser storage. Each language uses its own saved generator state. Dutch retains its previous key; English uses an `-en` suffix. The analysis draft stays on its page. An explicit “Use in Exercise 1” click puts the reviewed system and its original baseline in per-language session storage, then opens the generator, which consumes that handoff. Participant text is not automatically translated.
 
 Transparent extraction counts word occurrences and word pairs within five content words in a sentence, once per pair per sentence, among the 32 most frequent content words. These observations are included in the prepared ChatGPT prompt; frequency does not automatically become importance or selection weight.
 
@@ -48,3 +48,6 @@ npm run build
 The repository uses **Settings → Pages → Deploy from a branch → main → / (root)**. A push to main updates the public workshop. `.nojekyll` ensures static files are served directly. The optional manual Pages workflow builds the same current workshop.
 
 No workshop source documents or participant records are committed or collected. The earlier prototype remains in Git history and its existing `src/`, `css/` and documentation; see `docs/previous-prototype.md` for that version.
+
+## Concise analysis and generator handoff
+Exercise 1 uses a warm tint; Exercise 2 uses a cool green tint. Exercise 2 no longer duplicates the generator. Its primary flow is source → visible keyword/co-occurrence bars → editable collections → **Use in Exercise 1**. Quotes, templates, optional connection rules and the manual ChatGPT workflow are in expandable sections. The handoff carries the reviewed challenge, collections, custom weights, template and approved rule, along with a baseline for same-seed comparison. Validation runs before storage or navigation. The source document and raw analysis response are not included in the handoff. The generator saves the resulting ingredients in local browser storage as before.
