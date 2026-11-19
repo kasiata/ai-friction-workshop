@@ -2,4 +2,4 @@ export const fbsGroups=[['meer contact tussen onbekenden','een lagere drempel om
 const edge=(type,a,from,b,to)=>({type,from:{group:a,item:fbsGroups[a][from]},to:{group:b,item:fbsGroups[b][to]},enabled:true});
 export const fbsRelations=[edge('realises',1,0,0,0),edge('realises',1,1,0,1),edge('realises',1,2,0,2),edge('enables',2,0,1,1),edge('enables',2,1,1,0),edge('enables',2,2,1,0),edge('enables',2,3,1,2),edge('inhibits',2,4,1,0)];
 export const fbsLabels=['Functie · waarom?','Gedrag · wat gebeurt er?','Structuur · waarmee?'];
-export const fbsTemplate='Maak een ontmoetingsplek met {C}. Zo werkt het voorstel: {B}. Het ontwerp beoogt {A}. Test met bezoekers of de inrichting dit gedrag inderdaad uitlokt.';
+export const fbsTemplate='Maak een ontmoetingsplek met {C}. Zo werkt het voorstel: {B}. Het ontwerp beoogt {A}. Een herkenbare toegang leidt bezoekers naar een gedeelde werkplek. Losse onderdelen kunnen worden verplaatst om kleine groepen of één gezamenlijke kring te vormen.';

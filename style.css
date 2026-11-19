@@ -143,3 +143,9 @@ body[data-exercise="1"] .results{padding:20px;border:1px solid #cfc4c5;border-ra
 .unexpected-editor .chance-row{padding:10px 0}
 .unexpected-editor .chance-row label{margin:0;font-weight:400;font-size:12px;line-height:1.5}
 .unexpected-editor .chance-row input[type=range]{grid-column:1/-1;padding:0;height:28px;accent-color:var(--pink);border:0;background:transparent;cursor:ew-resize}
+.association-panel{padding:18px;margin-bottom:18px;border:1px solid #d6b8ca;border-radius:8px;background:#fff7fb}
+.association-panel h3{margin:0 0 14px;font-size:20px}
+.association-panel>input{background:white;border-radius:5px}
+.association-actions{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:12px}
+.association-actions .primary{font-size:14px;padding:10px 16px}
+.association-chain{font-size:17px;font-weight:700;color:#90225d;line-height:1.6;overflow-wrap:anywhere;margin-bottom:8px}

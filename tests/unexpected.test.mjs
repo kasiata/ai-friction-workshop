@@ -18,7 +18,7 @@ test('unexpected elements use a separate draw stream, preserving every original 
  const before=generate(off),after=generate(on);
  assert.deepEqual(after.trace,before.trace);
  assert.equal(after.surprises.length,on.lines);
- assert.ok(after.lines.every((line,i)=>line.startsWith(before.lines[i])&&line.includes(after.surprises[i].item)));
+ assert.ok(after.lines.every((line,i)=>line.endsWith(before.lines[i])&&line.includes(after.surprises[i].item)));
  assert.deepEqual(generate(on),after);
 });
 test('unexpected chances can exclude every twist except a participant-authored element',()=>{

@@ -2,4 +2,4 @@ export const fbsGroups=[["more contact between strangers","a lower barrier to jo
 const edge=(type,a,from,b,to)=>({type,from:{group:a,item:fbsGroups[a][from]},to:{group:b,item:fbsGroups[b][to]},enabled:true});
 export const fbsRelations=[edge('realises',1,0,0,0),edge('realises',1,1,0,1),edge('realises',1,2,0,2),edge('enables',2,0,1,1),edge('enables',2,1,1,0),edge('enables',2,2,1,0),edge('enables',2,3,1,2),edge('inhibits',2,4,1,0)];
 export const fbsLabels=["Function · why?","Behaviour · what happens?","Structure · with what?"];
-export const fbsTemplate="Create a meeting place with {C}. The intended use: {B}. The design aims for {A}. Test with visitors whether the arrangement encourages this behaviour.";
+export const fbsTemplate="Create a meeting place with {C}. The intended use: {B}. The design aims for {A}. A clearly marked entrance leads visitors to a shared activity area. Movable components can form small groups or one shared circle.";

@@ -1,4 +1,4 @@
-import {validateRelations} from './relations.mjs?v=b8707031bfc5';
+import {validateRelations} from './relations.mjs?v=86cc2ddaa7c5';
 export function extractFbs(source){
  const sentences=[...source.matchAll(/[^.!?\n]+[.!?]?/gu)].map(m=>({text:m[0].trim(),start:m.index})).filter(s=>s.text.length>10);
  const groups=[[],[],[]],seen=[new Set(),new Set(),new Set()];
