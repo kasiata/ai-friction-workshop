@@ -1,5 +1,6 @@
-import {distribution,generate} from './engine.mjs?v=8e0f9243102d';
-export function mapData(system){return {collections:system.groups.map((group,i)=>({label:system.labels[i],items:group.map((text,index)=>({text,index,probability:distribution(group,system.selections[i])[index]}))})),rule:structuredClone(system.rule),outputs:generate(system).lines.slice(0,2)};}
+import {relationLabel} from './relations.mjs?v=0c08b41aad94';
+import {distribution,generate} from './engine.mjs?v=0c08b41aad94';
+export function mapData(system){return {collections:system.groups.map((group,i)=>({label:system.labels[i],items:group.map((text,index)=>({text,index,probability:distribution(group,system.selections[i])[index]}))})),rule:structuredClone(system.rule),relations:structuredClone(system.relations||[]),relationsEnabled:system.relationsEnabled===true,outputs:generate(system).lines.slice(0,2)};}
 export function renderSystemMap(root,system,{sourceLength=0,onSelect=()=>{},onEdit=()=>{}}={}){
  const data=mapData(system),doc=root.ownerDocument;const el=(tag,cls,text)=>{const node=doc.createElement(tag);if(cls)node.className=cls;if(text!==undefined)node.textContent=text;return node;};
  root.replaceChildren();const source=el('div','map-source');source.append(el('strong','',"Source text"),el('span','hint',sourceLength.toLocaleString('en-GB')+" characters"));root.append(source,el('div','map-branches'));
@@ -9,6 +10,10 @@ export function renderSystemMap(root,system,{sourceLength=0,onSelect=()=>{},onEd
   c.items.slice(0,6).forEach(item=>section.append(addItem(item)));if(c.items.length>6){const more=el('details','map-more');more.append(el('summary','',String(c.items.length-6)+" more"));c.items.slice(6).forEach(item=>more.append(addItem(item)));section.append(more);}groups.append(section);
  });root.append(groups);
  const chance=el('p','map-note',"Bars show probabilities before connection rules. Click an ingredient to inspect its source.");root.append(chance);
- const rule=el('div','map-rule');rule.append(el('span','map-flow-arrow','↓'),el('strong','',"Connection"));const ruleText=system.rule.enabled?'B: '+system.rule.trigger+' → C: '+system.rule.allowed.join(' / '):"B and C are selected independently.";rule.append(el('p','',ruleText));root.append(rule);
+ const rule=el('div','map-rule');rule.append(el('span','map-flow-arrow','↓'),el('strong','',"FBS relations"));
+ if(data.relations.length){rule.append(el('p','hint',data.relationsEnabled?"Active relations constrain the possible combinations.":"Proposed relations — enable them to investigate their effect."));const list=el('ul','map-relations');for(const r of data.relations){const item=el('li',r.enabled&&data.relationsEnabled?'relation-active':'relation-proposed',relationLabel(r));list.append(item);}rule.append(list);}
+ else if(system.rule.enabled)rule.append(el('p','','B: '+system.rule.trigger+' → C: '+system.rule.allowed.join(' / ')));
+ else rule.append(el('p','',"No relations yet. Add a connection to shape the system."));
+ root.append(rule);
  const outputs=el('section','map-outcomes');outputs.append(el('h3','',"Possible outcomes"));const proposals=el('div','map-output-grid');data.outputs.forEach(text=>proposals.append(el('p','',text)));outputs.append(proposals);root.append(outputs);
 }
