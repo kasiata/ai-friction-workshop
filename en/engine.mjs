@@ -1,19 +1,23 @@
-import {validateRelations,relationCandidates} from './relations.mjs?v=132db420cbb6';
-import {fbsGroups,fbsRelations,fbsLabels,fbsTemplate} from './fbs-data.mjs?v=132db420cbb6';
+import {validateRelations,relationCandidates} from './relations.mjs?v=2bee8638922a';
+import {fbsGroups,fbsRelations,fbsLabels,fbsTemplate} from './fbs-data.mjs?v=2bee8638922a';
 export const selectionDefaults={model:'uniform',center:0.5,spread:0.2,rate:2,exponent:1.2,direction:'start',weights:[]};
 export const models={uniform:"Uniform",normal:"Normal",exponential:"Exponential",zipf:'Zipf',triangular:"Triangular",custom:"Custom weights"};
 export const unexpectedDefaults={enabled:false,items:["the place must move to a different location every day","participants cannot speak for the first minute","each visitor changes one element for the next visitor","one element must be made of ice","the design only works when two strangers cooperate"],selection:structuredClone(selectionDefaults)};
 export const defaults={version:3,unexpected:structuredClone(unexpectedDefaults),framework:'custom',relations:[],relationsEnabled:false,challenge:"Design a place on campus where strangers feel comfortable starting a conversation.",labels:["Spatial elements","Activities","Qualities"],groups:[["a circular bench","a movable wall","a shared table","a sheltered nook","an open stage"],["share a personal story","build something together","share food","exchange a question","draw together"],["playful","quiet","surprising","welcoming","energetic"]],selections:Array.from({length:3},()=>structuredClone(selectionDefaults)),recipe:'abc',template:"A place with {A}, where people {B}. The atmosphere is {C}.",rule:{enabled:false,trigger:"share a personal story",allowed:["quiet","welcoming"]},lines:4,seed:42};
 export const previousWorkshopTemplate="Arrange the place with {A}. Invite visitors to {B}. Make it feel {C}, with a visible welcome and room to join in. This creates a concrete proposal to try out on campus.";
-export const workshopDefaults={...structuredClone(defaults),template:"Arrange the place with {A}. Invite visitors to {B}. Make it feel {C}. Movable seating modules can form small groups or one shared circle."};
+export const interventionItems=["dampening sound with layers of fabric","interrupting sightlines with movable screens","focusing light on one shared spot","creating distance with small islands of seating","alternating materials between soft niches and hard open surfaces"];
+export const threeCollectionTemplate="The meeting place contains {A}. Visitors can {B}. It takes on a {C} character. Movable components can form small groups or one shared circle.";
+export const workshopDefaults={...structuredClone(defaults),labels:[...defaults.labels,"Interventions — how?"],groups:[...structuredClone(defaults.groups),[...interventionItems]],selections:Array.from({length:4},()=>structuredClone(selectionDefaults)),template:"The meeting place contains {A}. Visitors can {B}. It takes on a {C} character by {D}. Movable components can form small groups or one shared circle."};
+export function withInterventions(system){const next=structuredClone(normalize(system));if(next.groups.length===4)return validate(next);next.groups.push([...interventionItems]);next.labels.push("Interventions — how?");next.selections.push(structuredClone(selectionDefaults));const known=[defaults.template,threeCollectionTemplate,previousWorkshopTemplate,"Arrange the place with {A}. Invite visitors to {B}. Make it feel {C}. Movable seating modules can form small groups or one shared circle."];next.template=known.includes(next.template)?workshopDefaults.template:next.template+" The design takes shape by {D}.";return validate(next);}
+
 export const fbsDefaults={...structuredClone(defaults),framework:'fbs',groups:structuredClone(fbsGroups),labels:[...fbsLabels],template:fbsTemplate,relations:structuredClone(fbsRelations),relationsEnabled:false,rule:{enabled:false,trigger:fbsGroups[1][0],allowed:fbsGroups[2].slice(1,3)}};
-export function upgradeTemplate(template){if([previousWorkshopTemplate,"Arrange the place with {A}. Invite visitors to {B}. Make it feel {C}."].includes(template))return workshopDefaults.template;if(template==="Build the proposal around {C}. The intended use: {B}. The aim is {A}. Test with users whether this arrangement supports the expected behaviour.")return "Build the proposal around {C}. The intended use: {B}. The aim is {A}. A clearly marked entrance leads to a shared place for the activity. Movable components let participants rearrange the layout themselves.";if(template==="Create a meeting place with {C}. The intended use: {B}. The design aims for {A}. Test with visitors whether the arrangement encourages this behaviour.")return "Create a meeting place with {C}. The intended use: {B}. The design aims for {A}. A clearly marked entrance leads visitors to a shared activity area. Movable components can form small groups or one shared circle.";return template.replace(" Test with users whether this arrangement supports the expected behaviour.",'').replace(" Test with visitors whether the arrangement encourages this behaviour.",'');}
+export function upgradeTemplate(template){if([previousWorkshopTemplate,"Arrange the place with {A}. Invite visitors to {B}. Make it feel {C}.","Arrange the place with {A}. Invite visitors to {B}. Make it feel {C}. Movable seating modules can form small groups or one shared circle."].includes(template))return threeCollectionTemplate;if(template==="Build the proposal around {C}. The intended use: {B}. The aim is {A}. Test with users whether this arrangement supports the expected behaviour.")return "Build the proposal around {C}. The intended use: {B}. The aim is {A}. A clearly marked entrance leads to a shared place for the activity. Movable components let participants rearrange the layout themselves.";if(template==="Create a meeting place with {C}. The intended use: {B}. The design aims for {A}. Test with visitors whether the arrangement encourages this behaviour.")return "Create a meeting place with {C}. The intended use: {B}. The design aims for {A}. A clearly marked entrance leads visitors to a shared activity area. Movable components can form small groups or one shared circle.";return template.replace(" Test with users whether this arrangement supports the expected behaviour.",'').replace(" Test with visitors whether the arrangement encourages this behaviour.",'');}
 export function normalize(s){
  if(!s) return structuredClone(defaults);
  const {mode,weights,...rest}=s;
  const unexpected=structuredClone(s.unexpected||unexpectedDefaults);delete unexpected.association;
  const selections=s.selections||s.groups?.map((g,i)=>({...structuredClone(selectionDefaults),...(mode==='first'||mode==='rising'?{model:'custom',weights:g.map((_,j)=>mode==='first'?(j===0?weights?.[i]||1:1):j+1)}:{})}));
- return {...structuredClone(defaults),...rest,unexpected,version:3,selections,framework:s.framework||'custom',relations:s.relations||[],relationsEnabled:s.relationsEnabled===true,labels:s.labels||["Collection A","Collection B","Collection C"],template:upgradeTemplate(s.template||'{A} {B} {C}'),rule:s.rule||{enabled:false,trigger:'',allowed:[]}};
+ return {...structuredClone(defaults),...rest,unexpected,version:3,selections,framework:s.framework||'custom',relations:s.relations||[],relationsEnabled:s.relationsEnabled===true,labels:s.labels||(s.groups||defaults.groups).map((_,i)=>"Collection "+['A','B','C','D'][i]),template:upgradeTemplate(s.template||'{A} {B} {C}'),rule:s.rule||{enabled:false,trigger:'',allowed:[]}};
 }
 export function distribution(group,selection){
  if(!group.length)throw Error("Add at least one item.");
@@ -33,13 +37,13 @@ export function distribution(group,selection){
 }
 export function validate(s){
  if(s?.unexpected!==undefined){const u=s.unexpected;if(!u||typeof u.enabled!=='boolean'||!u.selection||!Object.hasOwn(models,u.selection.model)||!Array.isArray(u.items)||u.items.length>100||u.items.some(item=>typeof item!=='string'||!item.trim()||item.length>500))throw Error("Use up to 100 unexpected elements, each up to 500 characters.");if(u.enabled&&!u.items.length)throw Error("Add at least one unexpected element.");if(u.items.length)distribution(u.items,u.selection);}
- if(!s||!Array.isArray(s.groups)||s.groups.length!==3||s.groups.some(g=>!Array.isArray(g)||g.length>300||g.some(x=>typeof x!=='string'||!x.trim()||x.length>500)))throw Error("Use three collections with no more than 300 non-empty items each.");
+ if(!s||!Array.isArray(s.groups)||![3,4].includes(s.groups.length)||s.groups.some(g=>!Array.isArray(g)||g.length>300||g.some(x=>typeof x!=='string'||!x.trim()||x.length>500)))throw Error("Use three or four collections with up to 300 non-empty items.");
  if(s.groups.some(g=>!g.length))throw Error("Fill each collection with at least one item.");
  if(!['abc','cba',"echo"].includes(s.recipe)||!Number.isInteger(s.lines)||s.lines<1||s.lines>12||!Number.isInteger(s.seed)||s.seed<0||s.seed>4294967295)throw Error("Check the recipe, number of proposals and seed.");
- if(!Array.isArray(s.selections)||s.selections.length!==3)throw Error("Choose a selection model for each collection.");
- s.groups.forEach((g,i)=>{try{distribution(g,s.selections[i]);}catch(e){throw Error("Collection "+['A','B','C'][i]+': '+e.message);}});
- if(typeof s.challenge!=='string'||!s.challenge.trim()||s.challenge.length>2000||!Array.isArray(s.labels)||s.labels.length!==3||s.labels.some(x=>typeof x!=='string'||!x.trim()||x.length>100))throw Error("Enter a design challenge and three collection names.");
- if(typeof s.template!=='string'||s.template.length>2000||!['{A}','{B}','{C}'].every(t=>s.template.includes(t)))throw Error("Use {A}, {B} and {C} in your proposal template.");
+ if(!Array.isArray(s.selections)||s.selections.length!==s.groups.length)throw Error("Choose a selection model for each collection.");
+ s.groups.forEach((g,i)=>{try{distribution(g,s.selections[i]);}catch(e){throw Error("Collection "+['A','B','C','D'][i]+': '+e.message);}});
+ if(typeof s.challenge!=='string'||!s.challenge.trim()||s.challenge.length>2000||!Array.isArray(s.labels)||s.labels.length!==s.groups.length||s.labels.some(x=>typeof x!=='string'||!x.trim()||x.length>100))throw Error("Enter a design challenge and a name for each collection.");
+ if(typeof s.template!=='string'||s.template.length>2000||!['{A}','{B}','{C}','{D}'].slice(0,s.groups.length).every(t=>s.template.includes(t)))throw Error("Use a placeholder for every selected item: {A}, {B}, {C}, and {D} when using four collections.");
  if(!s.rule||typeof s.rule.enabled!=='boolean'||typeof s.rule.trigger!=='string'||!Array.isArray(s.rule.allowed)||s.rule.allowed.some(x=>typeof x!=='string'))throw Error("Invalid connection rule.");
  if(s.rule.enabled){if(!s.groups[1].includes(s.rule.trigger))throw Error("The condition must exactly match an item in B.");if(!s.rule.allowed.length||s.rule.allowed.some(x=>!s.groups[2].includes(x)))throw Error("Choose at least one existing C item for the connection rule. Use its exact text.");}
  if(s.relationsEnabled!==undefined&&typeof s.relationsEnabled!=='boolean')throw Error("Choose whether FBS relations are enabled.");
@@ -49,19 +53,20 @@ export function validate(s){
 export function generate(s){
  validate(s);let t=Number(s.seed)>>>0;
  const random=()=>{t=(t+0x6D2B79F5)>>>0;let n=t;n=Math.imul(n^n>>>15,n|1);n^=n+Math.imul(n^n>>>7,n|61);return ((n^n>>>14)>>>0)/4294967296;};
+ let dState=(Number(s.seed)^0x85ebca6b)>>>0;const randomD=()=>{dState=(dState+0x6D2B79F5)>>>0;let n=Math.imul(dState^dState>>>15,dState|1);n^=n+Math.imul(n^n>>>7,n|61);return ((n^n>>>14)>>>0)/4294967296;};
  const trace=[],lines=[];
  const probabilities=s.groups.map((g,i)=>distribution(g,s.selections[i]));
- function pick(group,i,row,restricted=false,selected=[]){
+ function pick(group,i,row,restricted=false,selected=[],draw=random){
   const fbs=relationCandidates(s,i,selected);
   const choices=group.map((item,index)=>({item,index,weight:probabilities[i][index]})).filter(x=>(!restricted||s.rule.allowed.includes(x.item))&&(!fbs?.allowed||fbs.allowed.has(x.item))&&!fbs?.excluded.has(x.item));
   const total=choices.reduce((sum,x)=>sum+x.weight,0);
   if(!total&&fbs?.used.length)throw Error("The active FBS relations leave no selectable ingredient. Edit the relations or probabilities.");
   if(!total)throw Error("The connection rule leaves only C items with probability 0. Adjust the rule or C selection model.");
-  let r=random()*total,choice=choices.findLast(x=>x.weight>0);
+  let r=draw()*total,choice=choices.findLast(x=>x.weight>0);
   for(const x of choices){r-=x.weight;if(r<0){choice=x;break;}}
   trace.push({row,group:i,index:choice.index,item:choice.item,probability:choice.weight/total,restricted,relations:(fbs?.used||[]).map(r=>({type:r.type,from:r.from.item,to:r.to.item})),model:s.selections[i].model});return choice.item;
  }
- let previous='';for(let row=1;row<=s.lines;row++){const a=pick(s.groups[0],0,row),b=pick(s.groups[1],1,row,false,[a]),restricted=s.rule.enabled&&b===s.rule.trigger,c=pick(s.groups[2],2,row,restricted,[a,b]);const values={A:s.recipe==="echo"&&row>1?previous:a,B:b,C:c};const template=s.recipe==='cba'?'{C} {B} {A}':s.template;lines.push(template.replace(/\{([ABC])\}/g,(_,key)=>values[key]));previous=c;}
+ let previous='';for(let row=1;row<=s.lines;row++){const a=pick(s.groups[0],0,row),b=pick(s.groups[1],1,row,false,[a]),restricted=s.rule.enabled&&b===s.rule.trigger,c=pick(s.groups[2],2,row,restricted,[a,b]);const d=s.groups.length===4?pick(s.groups[3],3,row,false,[],randomD):null;const values={A:s.recipe==="echo"&&row>1?previous:a,B:b,C:c,D:d};const template=s.recipe==='cba'?(d===null?'{C} {B} {A}':'{D} {C} {B} {A}'):s.template;lines.push(template.replace(/\{([ABCD])\}/g,(_,key)=>values[key]));previous=c;}
 
  if(s.unexpected?.enabled){
   const probabilities=distribution(s.unexpected.items,s.unexpected.selection),surprises=[];let u=(Number(s.seed)^0x9e3779b9)>>>0;

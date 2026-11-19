@@ -1,8 +1,8 @@
-import {buildFbsPrompt} from './fbs-prompt.mjs?v=132db420cbb6';
-import {extractFbs,validateAnalysisRelations} from './fbs-analysis.mjs?v=132db420cbb6';
-import {validateRelations} from './relations.mjs?v=132db420cbb6';
-import {validateExperiments,relationKey} from './experiments.mjs?v=132db420cbb6';
-import {defaults,selectionDefaults,validate,upgradeTemplate} from './engine.mjs?v=132db420cbb6';
+import {buildFbsPrompt} from './fbs-prompt.mjs?v=2bee8638922a';
+import {extractFbs,validateAnalysisRelations} from './fbs-analysis.mjs?v=2bee8638922a';
+import {validateRelations} from './relations.mjs?v=2bee8638922a';
+import {validateExperiments,relationKey} from './experiments.mjs?v=2bee8638922a';
+import {defaults,selectionDefaults,validate,upgradeTemplate} from './engine.mjs?v=2bee8638922a';
 export const maxSourceLength=50000;
 const stop=new Set(('de het een en of maar want dat dit die deze er hier daar is zijn was waren wordt worden met voor van aan op in om te tot uit bij door over als dan ook nog niet wel geen zich ik je jij we wij ze zij hij haar hem hun ons onze mijn jouw uw the a an and or but that this these those is are was were be been being with for from to at on in by as it its i you we they he she my our your their not no so can could should would has have had do does did').split(' '));
 export function checkSource(source){if(typeof source!=='string'||source.trim().length<20)throw Error("Enter at least 20 characters of source text.");if(source.length>maxSourceLength)throw Error("Use a source fragment of no more than 50,000 characters.");return source.trim();}

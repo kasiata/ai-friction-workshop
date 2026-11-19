@@ -146,3 +146,8 @@ body[data-exercise="1"] .results{padding:20px;border:1px solid #cfc4c5;border-ra
 .prompt-preview{margin:18px 0;padding:15px;border:1px solid #cfc4c5;border-radius:7px;background:rgba(255,255,255,.55)}
 .prompt-preview label{margin:0 0 10px;font-size:12px}
 .prompt-preview textarea{background:white;border-radius:5px;font-size:12px;line-height:1.6;min-height:200px}
+.four-collection-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.four-collection-grid .ingredient-column>input{font-size:15px;line-height:1.5}
+.four-collection-grid .selection-collection-title{font-size:13px}
+@media(max-width:1200px){.four-collection-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.four-collection-grid>.ingredient-column,.four-collection-grid>.selection-card{border-right:0;padding-right:0}.four-collection-grid>.selection-card{padding-bottom:18px;border-bottom:1px solid var(--line)}}
+@media(max-width:650px){.four-collection-grid{grid-template-columns:1fr}}
