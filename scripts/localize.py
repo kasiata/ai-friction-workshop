@@ -4,7 +4,7 @@ from html.parser import HTMLParser
 import html,json,re,hashlib
 ROOT=Path(__file__).resolve().parent.parent
 D=json.loads((ROOT/'scripts/translations.json').read_text())
-REV=hashlib.sha256(b''.join((ROOT/name).read_bytes() for name in ['app.mjs','exercise2.mjs','transfer.mjs','randomness.mjs','experiments.mjs','system-map.mjs','relations.mjs','relation-editor.mjs','fbs-data.mjs','fbs-analysis.mjs','fbs-prompt.mjs','example.mjs','begrippen.html','style.css','workshop.html','oefening-2.html','werkblad.html','scripts/translations.json'])).hexdigest()[:12]
+REV=hashlib.sha256(b''.join((ROOT/name).read_bytes() for name in ['app.mjs','exercise2.mjs','transfer.mjs','randomness.mjs','experiments.mjs','system-map.mjs','weights.mjs','relations.mjs','relation-editor.mjs','fbs-data.mjs','fbs-analysis.mjs','fbs-prompt.mjs','example.mjs','begrippen.html','style.css','workshop.html','oefening-2.html','werkblad.html','scripts/translations.json'])).hexdigest()[:12]
 
 def js(source):
     # Translate full template literals before their individual string components.
@@ -57,7 +57,7 @@ for lang in ['nl','en']:
         text=text.replace('href="./"','href="./?v='+REV+'"').replace('href="oefening-2.html"','href="oefening-2.html?v='+REV+'"').replace('href="begrippen.html"','href="begrippen.html?v='+REV+'"').replace('href="begrippen.html#toeval"','href="begrippen.html?v='+REV+'#toeval"')
         text=re.sub(r'href="(\.\./(?:en|nl)/[^"]*?\.html)"',lambda m:'href="'+m.group(1)+'?v='+REV+'"',text)
         (target/name).write_text(text)
-    for name in ['app.mjs','engine.mjs','analysis.mjs','document.mjs','exercise2.mjs','transfer.mjs','randomness.mjs','experiments.mjs','system-map.mjs','relations.mjs','relation-editor.mjs','fbs-data.mjs','fbs-analysis.mjs','fbs-prompt.mjs','example.mjs']:
+    for name in ['app.mjs','engine.mjs','analysis.mjs','document.mjs','exercise2.mjs','transfer.mjs','randomness.mjs','experiments.mjs','system-map.mjs','weights.mjs','relations.mjs','relation-editor.mjs','fbs-data.mjs','fbs-analysis.mjs','fbs-prompt.mjs','example.mjs']:
         text=(ROOT/name).read_text()
         if lang=='en':
             text=js(text)

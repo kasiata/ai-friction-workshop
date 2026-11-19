@@ -528,5 +528,9 @@
   "Zelfde structuur, ander gedrag": "Same structure, different behaviour",
   "Probeer een andere handeling. Moet je de bestaande relatie tussen gedrag en structuur herzien?": "Try a different action. Does the existing behaviour–structure relation need reconsidering?",
   "Toets één afhankelijkheid": "Question one dependency",
-  "Voorstel ${t.row} / ${['A','B','C'][t.group]} (${settings.labels[t.group]} · ${models[t.model]}): ${t.item} · kans ${(t.probability*100).toFixed(1)}%${t.restricted?' · verbindingsregel toegepast':''}${t.relations?.length?' · FBS: '+t.relations.map(r=>r.type).join(', '):''}": "Proposal ${t.row} / ${['A','B','C'][t.group]} (${settings.labels[t.group]} · ${models[t.model]}): ${t.item} · probability ${(t.probability*100).toFixed(1)}%${t.restricted?' · connection rule applied':''}${t.relations?.length?' · FBS: '+t.relations.map(r=>r.type).join(', '):''}"
+  "Voorstel ${t.row} / ${['A','B','C'][t.group]} (${settings.labels[t.group]} · ${models[t.model]}): ${t.item} · kans ${(t.probability*100).toFixed(1)}%${t.restricted?' · verbindingsregel toegepast':''}${t.relations?.length?' · FBS: '+t.relations.map(r=>r.type).join(', '):''}": "Proposal ${t.row} / ${['A','B','C'][t.group]} (${settings.labels[t.group]} · ${models[t.model]}): ${t.item} · probability ${(t.probability*100).toFixed(1)}%${t.restricted?' · connection rule applied':''}${t.relations?.length?' · FBS: '+t.relations.map(r=>r.type).join(', '):''}",
+  "Gewicht aanpassen: ": "Adjust weight: ",
+  " kans": " probability",
+  "Sleep de schuifjes om invloed te wijzigen. Percentages veranderen mee. Klik op een naam voor de bron.": "Drag the sliders to change influence. Percentages update together. Click a name to inspect its source.",
+  "Namen en ingrediënten aanpassen": "Edit names and ingredients"
 }

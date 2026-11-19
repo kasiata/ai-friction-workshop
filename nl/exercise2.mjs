@@ -1,13 +1,14 @@
-import {relationLabel} from './relations.mjs?v=0c08b41aad94';
-import {exampleText,exampleTitle,exampleSources} from './example.mjs?v=0c08b41aad94';
-import {createRelationEditor} from './relation-editor.mjs?v=0c08b41aad94';
-import {renderSystemMap} from './system-map.mjs?v=0c08b41aad94';
-import {localExperiments,applyExperiment,experimentAvailable,compareExperiment,validateExperiments,relationKey} from './experiments.mjs?v=0c08b41aad94';
-import {fbsDefaults as defaults} from './engine.mjs?v=0c08b41aad94';
-import {saveTransfer} from './transfer.mjs?v=0c08b41aad94';
-import {localAnalysis,parseAnalysis,quoteExists,buildPrompt,systemFromReview,checkSource} from './analysis.mjs?v=0c08b41aad94';
-import {readDocument} from './document.mjs?v=0c08b41aad94';
-const $=id=>document.getElementById(id);let analysis=null,analysedSource='',loadId=0,experimentBaseline=null,undoSnapshot=null,experimentDrafts=[],experimentRefs=[];
+import {setIngredientWeight} from './weights.mjs?v=69db5fde08ff';
+import {relationLabel} from './relations.mjs?v=69db5fde08ff';
+import {exampleText,exampleTitle,exampleSources} from './example.mjs?v=69db5fde08ff';
+import {createRelationEditor} from './relation-editor.mjs?v=69db5fde08ff';
+import {renderSystemMap} from './system-map.mjs?v=69db5fde08ff';
+import {localExperiments,applyExperiment,experimentAvailable,compareExperiment,validateExperiments,relationKey} from './experiments.mjs?v=69db5fde08ff';
+import {fbsDefaults as defaults} from './engine.mjs?v=69db5fde08ff';
+import {saveTransfer} from './transfer.mjs?v=69db5fde08ff';
+import {localAnalysis,parseAnalysis,quoteExists,buildPrompt,systemFromReview,checkSource} from './analysis.mjs?v=69db5fde08ff';
+import {readDocument} from './document.mjs?v=69db5fde08ff';
+const $=id=>document.getElementById(id);let analysis=null,analysedSource='',loadId=0,experimentBaseline=null,undoSnapshot=null,experimentDrafts=[],experimentRefs=[],mapController=null;
 const extraWeights=new Map();const weightKey=(group,index,text)=>group+'\u0000'+index+'\u0000'+text;
 const reviewRelations=createRelationEditor($('analysisRelationRows'),{groups:()=>analysis?analysis.collections.map((c,i)=>{const card=document.querySelector(`[data-collection="${i}"]`);if(!card)return c.items.map(x=>x.text);return [...card.querySelectorAll('.review-item')].filter(row=>row.querySelector('.keep').checked).map(row=>row.querySelector('.item-text').value.trim()).filter(Boolean).concat($('extra'+i).value.split('\n').map(x=>x.trim()).filter(Boolean));}):[[],[],[]],onChange:()=>refreshMap()});
 $('addAnalysisRelation').onclick=()=>reviewRelations.add();
@@ -58,10 +59,14 @@ function showSourceQuote(group,index){
   const p=document.createElement('p'),mark=document.createElement('mark');p.append(document.createTextNode((start>70?'…':'')+analysedSource.slice(Math.max(0,start-70),start)));mark.textContent=quote;p.append(mark,document.createTextNode(analysedSource.slice(start+quote.length,start+quote.length+70)+(start+quote.length+70<analysedSource.length?'…':'')));box.append(p);
  }catch(e){report(e.message);}
 }
-function refreshMap(){
+function refreshMap({preserve=false}={}){
  if(!analysis)return;
- try{const {system}=readReview();renderSystemMap($('systemMap'),system,{sourceLength:analysedSource.length,onSelect:showSourceQuote,onEdit:i=>{$('reviewEditor').open=true;$('reviewLabel'+i).focus();}});$('approveAnalysis').disabled=false;refreshExperimentAvailability(system);report('');}
+ try{const {system}=readReview();if(preserve&&mapController){mapController.update(system);}else mapController=renderSystemMap($('systemMap'),system,{sourceLength:analysedSource.length,onSelect:showSourceQuote,onWeight:changeMapWeight,onEdit:i=>{$('reviewEditor').open=true;$('reviewLabel'+i).focus();}});$('approveAnalysis').disabled=false;refreshExperimentAvailability(system);if(experimentBaseline&&!$('experimentPreview').hidden){const compared=compareExperiment(experimentBaseline,system);for(const [id,items] of [['experimentBefore',compared.before.lines],['experimentAfter',compared.after.lines]])$(id).replaceChildren(...items.map(text=>{const p=document.createElement('p');p.textContent=text;return p;}));}report('');}
  catch(e){$('reviewEditor').open=true;$('systemMap').textContent='Vul Functie, Gedrag en Structuur aan om een systeem te maken.';$('approveAnalysis').disabled=true;for(const ref of experimentRefs)ref.apply.disabled=true;report(e.message);}
+}
+function changeMapWeight(group,index,weight){
+ try{const {system}=readReview();const next=setIngredientWeight(system,group,index,weight);writeReview(next);refreshMap({preserve:true});}
+ catch(e){try{mapController?.update(readReview().system);}catch{}report(e.message);}
 }
 for(const id of ['reviewCollections','reviewTemplate','approveRule','useRelations','challenge'])$(id).addEventListener('input',()=>{if(id==='reviewCollections')reviewRelations.refresh();refreshMap();});
 function fillSelect(select,values,value){select.replaceChildren(...values.map(x=>{const o=document.createElement('option');o.value=x.value;o.textContent=x.label;return o;}));if(!values.some(x=>x.value===value)&&value){const missing=document.createElement('option');missing.value=value;missing.textContent=value+' · gewijzigd';select.append(missing);}select.value=value;}
