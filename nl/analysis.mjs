@@ -1,8 +1,8 @@
-import {buildFbsPrompt} from './fbs-prompt.mjs?v=d7c70da0df61';
-import {extractFbs,validateAnalysisRelations} from './fbs-analysis.mjs?v=d7c70da0df61';
-import {validateRelations} from './relations.mjs?v=d7c70da0df61';
-import {validateExperiments,relationKey} from './experiments.mjs?v=d7c70da0df61';
-import {defaults,selectionDefaults,validate} from './engine.mjs?v=d7c70da0df61';
+import {buildFbsPrompt} from './fbs-prompt.mjs?v=b8707031bfc5';
+import {extractFbs,validateAnalysisRelations} from './fbs-analysis.mjs?v=b8707031bfc5';
+import {validateRelations} from './relations.mjs?v=b8707031bfc5';
+import {validateExperiments,relationKey} from './experiments.mjs?v=b8707031bfc5';
+import {defaults,selectionDefaults,validate} from './engine.mjs?v=b8707031bfc5';
 export const maxSourceLength=50000;
 const stop=new Set(('de het een en of maar want dat dit die deze er hier daar is zijn was waren wordt worden met voor van aan op in om te tot uit bij door over als dan ook nog niet wel geen zich ik je jij we wij ze zij hij haar hem hun ons onze mijn jouw uw the a an and or but that this these those is are was were be been being with for from to at on in by as it its i you we they he she my our your their not no so can could should would has have had do does did').split(' '));
 export function checkSource(source){if(typeof source!=='string'||source.trim().length<20)throw Error('Voer minstens 20 tekens brontekst in.');if(source.length>maxSourceLength)throw Error('Gebruik een fragment van maximaal 50.000 tekens.');return source.trim();}

@@ -133,3 +133,13 @@ body[data-exercise="1"] .results{padding:20px;border:1px solid #cfc4c5;border-ra
 @media(max-width:800px){.review-system-results{order:-1;position:sticky;top:0;z-index:4;max-height:38vh;max-height:38svh;overflow:auto;background:#f8f3f5;border-radius:8px}.review-system-results .map-outcomes{padding:12px 15px}.review-system-results .map-outcomes h3{font-size:18px}.review-system-results .map-output-grid>p~p{display:none}.review-system-results .live-result-footnote{display:none}}
 @media(max-width:800px){body[data-exercise="1"] .controls{padding:0}.workshop-stage{padding:18px}.stage-heading h2{font-size:28px}}
 @media(max-width:650px){.separated-selection-grid{grid-template-columns:1fr}.separated-selection-grid>.selection-card{padding:0 0 20px;border-right:0;border-bottom:1px solid var(--line)}.separated-selection-grid>.selection-card:last-child{padding:0;border-bottom:0}.separated-selection-grid .selection-collection-title{min-height:0;margin-bottom:10px}.review-system-controls .map-controls .map-collections{grid-template-columns:1fr}.review-system-controls .map-collection{padding:0 0 20px;border-right:0;border-bottom:1px solid var(--line)}.review-system-controls .map-collection:last-child{padding:0;border-bottom:0}}
+.unexpected-editor{margin-top:22px;padding-top:20px;border-top:1px dashed #bc8da8;min-width:0}
+.unexpected-editor[hidden]{display:none!important}
+.unexpected-editor>.check{font-size:13px;font-weight:600}
+.unexpected-editor textarea{width:100%;background:white;border-radius:6px;line-height:1.7;min-height:125px}
+.unexpected-editor h3{font-size:18px;margin:0 0 15px;color:#8a1d59}
+.unexpected-editor>select{max-width:400px;background:white;border-radius:5px}
+.unexpected-editor>.chance-sliders{max-height:340px;margin-top:12px}
+.unexpected-editor .chance-row{padding:10px 0}
+.unexpected-editor .chance-row label{margin:0;font-weight:400;font-size:12px;line-height:1.5}
+.unexpected-editor .chance-row input[type=range]{grid-column:1/-1;padding:0;height:28px;accent-color:var(--pink);border:0;background:transparent;cursor:ew-resize}

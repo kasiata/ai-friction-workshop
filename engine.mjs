@@ -2,8 +2,10 @@ import {validateRelations,relationCandidates} from './relations.mjs';
 import {fbsGroups,fbsRelations,fbsLabels,fbsTemplate} from './fbs-data.mjs';
 export const selectionDefaults={model:'uniform',center:0.5,spread:0.2,rate:2,exponent:1.2,direction:'start',weights:[]};
 export const models={uniform:'Uniform',normal:'Normaal',exponential:'Exponentieel',zipf:'Zipf',triangular:'Driehoek',custom:'Eigen gewichten'};
-export const defaults={version:3,framework:'custom',relations:[],relationsEnabled:false,challenge:'Ontwerp een plek op de campus waar onbekenden gemakkelijk een gesprek beginnen.',labels:['Ruimtelijke elementen','Activiteiten','Kwaliteiten'],groups:[['een ronde bank','een verplaatsbare wand','een gedeelde tafel','een beschutte nis','een open podium'],['een persoonlijk verhaal delen','samen iets bouwen','eten delen','een vraag uitwisselen','samen tekenen'],['speels','rustig','verrassend','uitnodigend','energiek']],selections:Array.from({length:3},()=>structuredClone(selectionDefaults)),recipe:'abc',template:'Een plek met {A}, waar mensen {B}. De sfeer is {C}.',rule:{enabled:false,trigger:'een persoonlijk verhaal delen',allowed:['rustig','uitnodigend']},lines:4,seed:42};
-export const workshopDefaults={...structuredClone(defaults),template:'Richt de plek in met {A}. Nodig bezoekers uit om {B}. Maak de plek {C}, met een zichtbaar welkom en ruimte om aan te schuiven. Zo ontstaat een concreet voorstel om op de campus uit te proberen.'};
+export const unexpectedDefaults={enabled:false,items:['de plek moet elke dag van locatie veranderen','deelnemers mogen de eerste minuut niet praten','iedere bezoeker verandert één onderdeel voor de volgende','één onderdeel moet van ijs zijn','het ontwerp werkt alleen als twee onbekenden samenwerken'],selection:structuredClone(selectionDefaults)};
+export const defaults={version:3,unexpected:structuredClone(unexpectedDefaults),framework:'custom',relations:[],relationsEnabled:false,challenge:'Ontwerp een plek op de campus waar onbekenden gemakkelijk een gesprek beginnen.',labels:['Ruimtelijke elementen','Activiteiten','Kwaliteiten'],groups:[['een ronde bank','een verplaatsbare wand','een gedeelde tafel','een beschutte nis','een open podium'],['een persoonlijk verhaal delen','samen iets bouwen','eten delen','een vraag uitwisselen','samen tekenen'],['speels','rustig','verrassend','uitnodigend','energiek']],selections:Array.from({length:3},()=>structuredClone(selectionDefaults)),recipe:'abc',template:'Een plek met {A}, waar mensen {B}. De sfeer is {C}.',rule:{enabled:false,trigger:'een persoonlijk verhaal delen',allowed:['rustig','uitnodigend']},lines:4,seed:42};
+export const previousWorkshopTemplate='Richt de plek in met {A}. Nodig bezoekers uit om {B}. Maak de plek {C}, met een zichtbaar welkom en ruimte om aan te schuiven. Zo ontstaat een concreet voorstel om op de campus uit te proberen.';
+export const workshopDefaults={...structuredClone(defaults),template:'Richt de plek in met {A}. Nodig bezoekers uit om {B}. Maak de plek {C}.'};
 export const fbsDefaults={...structuredClone(defaults),framework:'fbs',groups:structuredClone(fbsGroups),labels:[...fbsLabels],template:fbsTemplate,relations:structuredClone(fbsRelations),relationsEnabled:false,rule:{enabled:false,trigger:fbsGroups[1][0],allowed:fbsGroups[2].slice(1,3)}};
 export function normalize(s){
  if(!s) return structuredClone(defaults);
@@ -28,6 +30,7 @@ export function distribution(group,selection){
   if(!total)throw Error('Minstens één item moet een positief gewicht hebben.');return raw.map(w=>w/total);
 }
 export function validate(s){
+ if(s?.unexpected!==undefined){const u=s.unexpected;if(!u||typeof u.enabled!=='boolean'||!u.selection||!Object.hasOwn(models,u.selection.model)||!Array.isArray(u.items)||u.items.length>100||u.items.some(item=>typeof item!=='string'||!item.trim()||item.length>500))throw Error('Gebruik maximaal 100 onverwachte elementen van maximaal 500 tekens.');if(u.enabled&&!u.items.length)throw Error('Voeg minstens één onverwacht element toe.');if(u.items.length)distribution(u.items,u.selection);}
  if(!s||!Array.isArray(s.groups)||s.groups.length!==3||s.groups.some(g=>!Array.isArray(g)||g.length>300||g.some(x=>typeof x!=='string'||!x.trim()||x.length>500)))throw Error('Gebruik drie verzamelingen met maximaal 300 niet-lege items.');
  if(s.groups.some(g=>!g.length))throw Error('Vul elke verzameling met minstens één item.');
  if(!['abc','cba','echo'].includes(s.recipe)||!Number.isInteger(s.lines)||s.lines<1||s.lines>12||!Number.isInteger(s.seed)||s.seed<0||s.seed>4294967295)throw Error('Controleer recept, aantal voorstellen en seed.');
@@ -57,5 +60,10 @@ export function generate(s){
   trace.push({row,group:i,index:choice.index,item:choice.item,probability:choice.weight/total,restricted,relations:(fbs?.used||[]).map(r=>({type:r.type,from:r.from.item,to:r.to.item})),model:s.selections[i].model});return choice.item;
  }
  let previous='';for(let row=1;row<=s.lines;row++){const a=pick(s.groups[0],0,row),b=pick(s.groups[1],1,row,false,[a]),restricted=s.rule.enabled&&b===s.rule.trigger,c=pick(s.groups[2],2,row,restricted,[a,b]);const values={A:s.recipe==='echo'&&row>1?previous:a,B:b,C:c};const template=s.recipe==='cba'?'{C} {B} {A}':s.template;lines.push(template.replace(/\{([ABC])\}/g,(_,key)=>values[key]));previous=c;}
+ if(s.unexpected?.enabled){
+  const probabilities=distribution(s.unexpected.items,s.unexpected.selection),surprises=[];let u=(Number(s.seed)^0x9e3779b9)>>>0;
+  for(let row=1;row<=lines.length;row++){u=(u+0x6D2B79F5)>>>0;let n=Math.imul(u^u>>>15,u|1);n^=n+Math.imul(n^n>>>7,n|61);let r=((n^n>>>14)>>>0)/4294967296,index=probabilities.findLastIndex(p=>p>0);for(let i=0;i<probabilities.length;i++){r-=probabilities[i];if(r<0){index=i;break;}}const item=s.unexpected.items[index];lines[row-1]+=' Onverwacht element: '+item.replace(/[.!?]+$/,'')+'.';surprises.push({row,index,item,probability:probabilities[index]});}
+  return {lines,trace,surprises};
+ }
  return {lines,trace};
 }

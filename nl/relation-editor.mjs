@@ -1,4 +1,4 @@
-import {relationTypes,relationEndpoints} from './relations.mjs?v=d7c70da0df61';
+import {relationTypes,relationEndpoints} from './relations.mjs?v=b8707031bfc5';
 export function createRelationEditor(root,{groups,onChange=()=>{}}){
  const doc=root.ownerDocument;let state=[];
  const node=(tag,text)=>{const n=doc.createElement(tag);if(text!==undefined)n.textContent=text;return n;};

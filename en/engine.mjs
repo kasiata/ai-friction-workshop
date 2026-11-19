@@ -1,9 +1,11 @@
-import {validateRelations,relationCandidates} from './relations.mjs?v=d7c70da0df61';
-import {fbsGroups,fbsRelations,fbsLabels,fbsTemplate} from './fbs-data.mjs?v=d7c70da0df61';
+import {validateRelations,relationCandidates} from './relations.mjs?v=b8707031bfc5';
+import {fbsGroups,fbsRelations,fbsLabels,fbsTemplate} from './fbs-data.mjs?v=b8707031bfc5';
 export const selectionDefaults={model:'uniform',center:0.5,spread:0.2,rate:2,exponent:1.2,direction:'start',weights:[]};
 export const models={uniform:"Uniform",normal:"Normal",exponential:"Exponential",zipf:'Zipf',triangular:"Triangular",custom:"Custom weights"};
-export const defaults={version:3,framework:'custom',relations:[],relationsEnabled:false,challenge:"Design a place on campus where strangers feel comfortable starting a conversation.",labels:["Spatial elements","Activities","Qualities"],groups:[["a circular bench","a movable wall","a shared table","a sheltered nook","an open stage"],["share a personal story","build something together","share food","exchange a question","draw together"],["playful","quiet","surprising","welcoming","energetic"]],selections:Array.from({length:3},()=>structuredClone(selectionDefaults)),recipe:'abc',template:"A place with {A}, where people {B}. The atmosphere is {C}.",rule:{enabled:false,trigger:"share a personal story",allowed:["quiet","welcoming"]},lines:4,seed:42};
-export const workshopDefaults={...structuredClone(defaults),template:"Arrange the place with {A}. Invite visitors to {B}. Make it feel {C}, with a visible welcome and room to join in. This creates a concrete proposal to try out on campus."};
+export const unexpectedDefaults={enabled:false,items:["the place must move to a different location every day","participants cannot speak for the first minute","each visitor changes one element for the next visitor","one element must be made of ice","the design only works when two strangers cooperate"],selection:structuredClone(selectionDefaults)};
+export const defaults={version:3,unexpected:structuredClone(unexpectedDefaults),framework:'custom',relations:[],relationsEnabled:false,challenge:"Design a place on campus where strangers feel comfortable starting a conversation.",labels:["Spatial elements","Activities","Qualities"],groups:[["a circular bench","a movable wall","a shared table","a sheltered nook","an open stage"],["share a personal story","build something together","share food","exchange a question","draw together"],["playful","quiet","surprising","welcoming","energetic"]],selections:Array.from({length:3},()=>structuredClone(selectionDefaults)),recipe:'abc',template:"A place with {A}, where people {B}. The atmosphere is {C}.",rule:{enabled:false,trigger:"share a personal story",allowed:["quiet","welcoming"]},lines:4,seed:42};
+export const previousWorkshopTemplate="Arrange the place with {A}. Invite visitors to {B}. Make it feel {C}, with a visible welcome and room to join in. This creates a concrete proposal to try out on campus.";
+export const workshopDefaults={...structuredClone(defaults),template:"Arrange the place with {A}. Invite visitors to {B}. Make it feel {C}."};
 export const fbsDefaults={...structuredClone(defaults),framework:'fbs',groups:structuredClone(fbsGroups),labels:[...fbsLabels],template:fbsTemplate,relations:structuredClone(fbsRelations),relationsEnabled:false,rule:{enabled:false,trigger:fbsGroups[1][0],allowed:fbsGroups[2].slice(1,3)}};
 export function normalize(s){
  if(!s) return structuredClone(defaults);
@@ -28,6 +30,7 @@ export function distribution(group,selection){
   if(!total)throw Error("At least one item must have a positive weight.");return raw.map(w=>w/total);
 }
 export function validate(s){
+ if(s?.unexpected!==undefined){const u=s.unexpected;if(!u||typeof u.enabled!=='boolean'||!u.selection||!Object.hasOwn(models,u.selection.model)||!Array.isArray(u.items)||u.items.length>100||u.items.some(item=>typeof item!=='string'||!item.trim()||item.length>500))throw Error("Use up to 100 unexpected elements, each up to 500 characters.");if(u.enabled&&!u.items.length)throw Error("Add at least one unexpected element.");if(u.items.length)distribution(u.items,u.selection);}
  if(!s||!Array.isArray(s.groups)||s.groups.length!==3||s.groups.some(g=>!Array.isArray(g)||g.length>300||g.some(x=>typeof x!=='string'||!x.trim()||x.length>500)))throw Error("Use three collections with no more than 300 non-empty items each.");
  if(s.groups.some(g=>!g.length))throw Error("Fill each collection with at least one item.");
  if(!['abc','cba','echo'].includes(s.recipe)||!Number.isInteger(s.lines)||s.lines<1||s.lines>12||!Number.isInteger(s.seed)||s.seed<0||s.seed>4294967295)throw Error("Check the recipe, number of proposals and seed.");
@@ -57,5 +60,10 @@ export function generate(s){
   trace.push({row,group:i,index:choice.index,item:choice.item,probability:choice.weight/total,restricted,relations:(fbs?.used||[]).map(r=>({type:r.type,from:r.from.item,to:r.to.item})),model:s.selections[i].model});return choice.item;
  }
  let previous='';for(let row=1;row<=s.lines;row++){const a=pick(s.groups[0],0,row),b=pick(s.groups[1],1,row,false,[a]),restricted=s.rule.enabled&&b===s.rule.trigger,c=pick(s.groups[2],2,row,restricted,[a,b]);const values={A:s.recipe==='echo'&&row>1?previous:a,B:b,C:c};const template=s.recipe==='cba'?'{C} {B} {A}':s.template;lines.push(template.replace(/\{([ABC])\}/g,(_,key)=>values[key]));previous=c;}
+ if(s.unexpected?.enabled){
+  const probabilities=distribution(s.unexpected.items,s.unexpected.selection),surprises=[];let u=(Number(s.seed)^0x9e3779b9)>>>0;
+  for(let row=1;row<=lines.length;row++){u=(u+0x6D2B79F5)>>>0;let n=Math.imul(u^u>>>15,u|1);n^=n+Math.imul(n^n>>>7,n|61);let r=((n^n>>>14)>>>0)/4294967296,index=probabilities.findLastIndex(p=>p>0);for(let i=0;i<probabilities.length;i++){r-=probabilities[i];if(r<0){index=i;break;}}const item=s.unexpected.items[index];lines[row-1]+=" Unexpected element: "+item.replace(/[.!?]+$/,'')+'.';surprises.push({row,index,item,probability:probabilities[index]});}
+  return {lines,trace,surprises};
+ }
  return {lines,trace};
 }

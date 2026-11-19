@@ -638,5 +638,19 @@
   "De analyse stelt verzamelingen voor. Jij bepaalt de namen en welke items erin blijven.": "The analysis suggests collections. You choose their names and which items to keep.",
   "Kies per verzameling hoe je eruit trekt. De sliders bepalen de kans per item.": "Choose how to draw from each collection. The sliders set the chance of each item.",
   "Verbind de geselecteerde items tot een voorstel. Verbanden en regels zijn optioneel.": "Connect the selected items into a proposal. Relationships and rules are optional.",
-  "Verbanden uit de analyse (optioneel)": "Relationships from the analysis (optional)"
+  "Verbanden uit de analyse (optioneel)": "Relationships from the analysis (optional)",
+  "Richt de plek in met {A}. Nodig bezoekers uit om {B}. Maak de plek {C}.": "Arrange the place with {A}. Invite visitors to {B}. Make it feel {C}.",
+  "de plek moet elke dag van locatie veranderen": "the place must move to a different location every day",
+  "deelnemers mogen de eerste minuut niet praten": "participants cannot speak for the first minute",
+  "iedere bezoeker verandert één onderdeel voor de volgende": "each visitor changes one element for the next visitor",
+  "één onderdeel moet van ijs zijn": "one element must be made of ice",
+  "het ontwerp werkt alleen als twee onbekenden samenwerken": "the design only works when two strangers cooperate",
+  "Voeg een onverwacht element toe": "Add an unexpected element",
+  "Een extra verzameling met verrassingen of beperkingen. Eén element wordt aan elk voorstel toegevoegd.": "An extra collection of surprises or constraints. One element is added to each proposal.",
+  "Onverwachte elementen · één per regel": "Unexpected elements · one per line",
+  "★ Onverwacht element": "★ Unexpected element",
+  " Onverwacht element: ": " Unexpected element: ",
+  "onverwacht element": "unexpected element",
+  "Gebruik maximaal 100 onverwachte elementen van maximaal 500 tekens.": "Use up to 100 unexpected elements, each up to 500 characters.",
+  "Voeg minstens één onverwacht element toe.": "Add at least one unexpected element."
 }
