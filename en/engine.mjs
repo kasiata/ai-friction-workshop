@@ -1,8 +1,9 @@
-import {validateRelations,relationCandidates} from './relations.mjs?v=793229fe8aae';
-import {fbsGroups,fbsRelations,fbsLabels,fbsTemplate} from './fbs-data.mjs?v=793229fe8aae';
+import {validateRelations,relationCandidates} from './relations.mjs?v=f284fc9fa3fa';
+import {fbsGroups,fbsRelations,fbsLabels,fbsTemplate} from './fbs-data.mjs?v=f284fc9fa3fa';
 export const selectionDefaults={model:'uniform',center:0.5,spread:0.2,rate:2,exponent:1.2,direction:'start',weights:[]};
 export const models={uniform:"Uniform",normal:"Normal",exponential:"Exponential",zipf:'Zipf',triangular:"Triangular",custom:"Custom weights"};
 export const defaults={version:3,framework:'custom',relations:[],relationsEnabled:false,challenge:"Design a place on campus where strangers feel comfortable starting a conversation.",labels:["Spatial elements","Activities","Qualities"],groups:[["a circular bench","a movable wall","a shared table","a sheltered nook","an open stage"],["share a personal story","build something together","share food","exchange a question","draw together"],["playful","quiet","surprising","welcoming","energetic"]],selections:Array.from({length:3},()=>structuredClone(selectionDefaults)),recipe:'abc',template:"A place with {A}, where people {B}. The atmosphere is {C}.",rule:{enabled:false,trigger:"share a personal story",allowed:["quiet","welcoming"]},lines:4,seed:42};
+export const workshopDefaults={...structuredClone(defaults),template:"Arrange the place with {A}. Invite visitors to {B}. Make it feel {C}, with a visible welcome and room to join in. This creates a concrete proposal to try out on campus."};
 export const fbsDefaults={...structuredClone(defaults),framework:'fbs',groups:structuredClone(fbsGroups),labels:[...fbsLabels],template:fbsTemplate,relations:structuredClone(fbsRelations),relationsEnabled:false,rule:{enabled:false,trigger:fbsGroups[1][0],allowed:fbsGroups[2].slice(1,3)}};
 export function normalize(s){
  if(!s) return structuredClone(defaults);
