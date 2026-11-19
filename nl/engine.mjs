@@ -1,9 +1,9 @@
-import {validateRelations,relationCandidates} from './relations.mjs?v=e699497a03c4';
-import {fbsGroups,fbsRelations,fbsLabels,fbsTemplate} from './fbs-data.mjs?v=e699497a03c4';
+import {validateRelations,relationCandidates} from './relations.mjs?v=793229fe8aae';
+import {fbsGroups,fbsRelations,fbsLabels,fbsTemplate} from './fbs-data.mjs?v=793229fe8aae';
 export const selectionDefaults={model:'uniform',center:0.5,spread:0.2,rate:2,exponent:1.2,direction:'start',weights:[]};
 export const models={uniform:'Uniform',normal:'Normaal',exponential:'Exponentieel',zipf:'Zipf',triangular:'Driehoek',custom:'Eigen gewichten'};
 export const defaults={version:3,framework:'custom',relations:[],relationsEnabled:false,challenge:'Ontwerp een plek op de campus waar onbekenden gemakkelijk een gesprek beginnen.',labels:['Ruimtelijke elementen','Activiteiten','Kwaliteiten'],groups:[['een ronde bank','een verplaatsbare wand','een gedeelde tafel','een beschutte nis','een open podium'],['een persoonlijk verhaal delen','samen iets bouwen','eten delen','een vraag uitwisselen','samen tekenen'],['speels','rustig','verrassend','uitnodigend','energiek']],selections:Array.from({length:3},()=>structuredClone(selectionDefaults)),recipe:'abc',template:'Een plek met {A}, waar mensen {B}. De sfeer is {C}.',rule:{enabled:false,trigger:'een persoonlijk verhaal delen',allowed:['rustig','uitnodigend']},lines:4,seed:42};
-export const fbsDefaults={...structuredClone(defaults),framework:'fbs',groups:structuredClone(fbsGroups),labels:[...fbsLabels],template:fbsTemplate,relations:structuredClone(fbsRelations),relationsEnabled:true,rule:{enabled:false,trigger:fbsGroups[1][0],allowed:fbsGroups[2].slice(1,3)}};
+export const fbsDefaults={...structuredClone(defaults),framework:'fbs',groups:structuredClone(fbsGroups),labels:[...fbsLabels],template:fbsTemplate,relations:structuredClone(fbsRelations),relationsEnabled:false,rule:{enabled:false,trigger:fbsGroups[1][0],allowed:fbsGroups[2].slice(1,3)}};
 export function normalize(s){
  if(!s) return structuredClone(defaults);
  const {mode,weights,...rest}=s;
@@ -23,7 +23,7 @@ export function distribution(group,selection){
  const raw=group.map((_,i)=>{const x=n===1?center:i/(n-1),rank=direction==='end'?n-i:i+1;
   switch(model){case 'uniform':return 1;case 'normal':return Math.exp(Math.max(-700,-0.5*((x-center)/spread)**2));case 'exponential':return Math.exp(-rate*(direction==='end'?1-x:x));case 'zipf':return rank**(-exponent);case 'triangular':return n===1?1:Math.max(0,1-Math.abs(i-center*(n-1))/Math.max(1,spread*(n-1)));case 'custom':return selection.weights[i];}
  });
- const total=raw.reduce((a,b)=>a+b,0);if(!total&&fbs?.used.length)throw Error('De actieve FBS-relaties laten geen kiesbaar ingrediënt over. Pas de relaties of kansen aan.');
+ const total=raw.reduce((a,b)=>a+b,0);
   if(!total)throw Error('Minstens één item moet een positief gewicht hebben.');return raw.map(w=>w/total);
 }
 export function validate(s){

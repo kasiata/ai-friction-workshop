@@ -1,6 +1,6 @@
-import {ingredientWeights} from './weights.mjs?v=e699497a03c4';
-import {relationLabel} from './relations.mjs?v=e699497a03c4';
-import {distribution,generate} from './engine.mjs?v=e699497a03c4';
+import {ingredientWeights} from './weights.mjs?v=793229fe8aae';
+import {relationLabel} from './relations.mjs?v=793229fe8aae';
+import {distribution,generate} from './engine.mjs?v=793229fe8aae';
 export function mapData(system){return {collections:system.groups.map((group,i)=>({label:system.labels[i],items:group.map((text,index)=>({text,index,probability:distribution(group,system.selections[i])[index]}))})),rule:structuredClone(system.rule),relations:structuredClone(system.relations||[]),relationsEnabled:system.relationsEnabled===true,outputs:generate(system).lines.slice(0,2)};}
 export function renderSystemMap(root,system,{sourceLength=0,onSelect=()=>{},onEdit=()=>{},onWeight=()=>{}}={}){
  const data=mapData(system),weightNodes=[[],[],[]],doc=root.ownerDocument;const el=(tag,cls,text)=>{const node=doc.createElement(tag);if(cls)node.className=cls;if(text!==undefined)node.textContent=text;return node;};

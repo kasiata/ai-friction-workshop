@@ -57,3 +57,23 @@ header,main,footer{max-width:1440px}header{padding:28px 4%}main{padding:0 4%}.br
 /* One modern type family, with a clear heading/control hierarchy. */
 body,button,input,textarea,select{font-family:'Manrope',Arial,sans-serif}h1{font-weight:750;letter-spacing:-1.8px}h2,h3,h4,.tabs a .tab-title{font-weight:700}.brand{font-weight:800}.primary{font-family:'Manrope',Arial,sans-serif;font-weight:650;font-style:normal}.tabs a .tab-number{font-weight:700}.output{font-weight:500}.output p{font-weight:600}.paper p,.transfer-action .hint{font-style:normal}button,input,select,textarea{font-synthesis:none}
 .empty{font-style:normal}
+/* Exercise 1: editable brief and direct probability controls. */
+body[data-exercise="1"] .challenge textarea{display:block;border:1px solid #b9aeb3;background:rgba(255,255,255,.85);border-radius:6px;padding:12px;min-height:86px;height:auto;font-size:18px;line-height:1.5}
+body[data-exercise="1"] .challenge:focus-within{box-shadow:0 0 0 2px var(--pink)}
+.challenge #challengeHelp{margin:9px 0 0;font-size:12px;line-height:1.6}
+.chance-intro{font-size:13px;color:var(--muted);max-width:760px;margin:-8px 0 22px;line-height:1.6}
+.chance-heading{font-size:11px;font-weight:700;margin-top:15px}
+.chance-sliders{max-height:440px;margin-top:6px;overflow:auto;padding:0 5px 0 0}
+.chance-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px 8px;padding:12px 0;border-bottom:1px solid var(--line)}
+.chance-row .probability-label{margin:0;white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere;font-size:12px;font-weight:400;line-height:1.5;color:var(--ink)}
+.chance-row output{font-size:12px;font-variant-numeric:tabular-nums;color:var(--pink);font-weight:700;padding-top:2px}
+.selection-card .chance-row input[type=range]{grid-column:1/-1;width:100%;height:28px;padding:0;margin:0;accent-color:var(--pink);cursor:ew-resize;background:transparent;border:0;touch-action:pan-y}
+.chance-row input:disabled{cursor:default;opacity:.5}
+.advanced-model{font-size:11px;margin:8px 0;color:var(--muted)}
+.advanced-model>summary{padding:5px 0}
+.selection-card>label{font-size:11px;margin-top:0}
+.relation-toggle{margin-top:18px;font-weight:500}
+body[data-exercise="1"] .results{position:sticky;top:18px;align-self:start;max-height:calc(100vh - 36px);overflow:auto}
+@media(max-width:800px){body[data-exercise="1"] .results{position:static;max-height:none;overflow:visible}.chance-sliders{max-height:none}}
+.ingredient-column>.collection-edit-label{grid-column:1/-1;font-size:10px;font-weight:400;color:var(--muted);margin:8px 0 0}
+.ingredient-column>textarea{background:rgba(255,255,255,.5);border:1px solid #c8c0bf;border-radius:6px;padding:10px;font-size:13px;line-height:1.7}

@@ -1,9 +1,9 @@
-import {validateRelations,relationCandidates} from './relations.mjs?v=e699497a03c4';
-import {fbsGroups,fbsRelations,fbsLabels,fbsTemplate} from './fbs-data.mjs?v=e699497a03c4';
+import {validateRelations,relationCandidates} from './relations.mjs?v=793229fe8aae';
+import {fbsGroups,fbsRelations,fbsLabels,fbsTemplate} from './fbs-data.mjs?v=793229fe8aae';
 export const selectionDefaults={model:'uniform',center:0.5,spread:0.2,rate:2,exponent:1.2,direction:'start',weights:[]};
 export const models={uniform:"Uniform",normal:"Normal",exponential:"Exponential",zipf:'Zipf',triangular:"Triangular",custom:"Custom weights"};
 export const defaults={version:3,framework:'custom',relations:[],relationsEnabled:false,challenge:"Design a place on campus where strangers feel comfortable starting a conversation.",labels:["Spatial elements","Activities","Qualities"],groups:[["a circular bench","a movable wall","a shared table","a sheltered nook","an open stage"],["share a personal story","build something together","share food","exchange a question","draw together"],["playful","quiet","surprising","welcoming","energetic"]],selections:Array.from({length:3},()=>structuredClone(selectionDefaults)),recipe:'abc',template:"A place with {A}, where people {B}. The atmosphere is {C}.",rule:{enabled:false,trigger:"share a personal story",allowed:["quiet","welcoming"]},lines:4,seed:42};
-export const fbsDefaults={...structuredClone(defaults),framework:'fbs',groups:structuredClone(fbsGroups),labels:[...fbsLabels],template:fbsTemplate,relations:structuredClone(fbsRelations),relationsEnabled:true,rule:{enabled:false,trigger:fbsGroups[1][0],allowed:fbsGroups[2].slice(1,3)}};
+export const fbsDefaults={...structuredClone(defaults),framework:'fbs',groups:structuredClone(fbsGroups),labels:[...fbsLabels],template:fbsTemplate,relations:structuredClone(fbsRelations),relationsEnabled:false,rule:{enabled:false,trigger:fbsGroups[1][0],allowed:fbsGroups[2].slice(1,3)}};
 export function normalize(s){
  if(!s) return structuredClone(defaults);
  const {mode,weights,...rest}=s;
@@ -23,7 +23,7 @@ export function distribution(group,selection){
  const raw=group.map((_,i)=>{const x=n===1?center:i/(n-1),rank=direction==='end'?n-i:i+1;
   switch(model){case 'uniform':return 1;case 'normal':return Math.exp(Math.max(-700,-0.5*((x-center)/spread)**2));case 'exponential':return Math.exp(-rate*(direction==='end'?1-x:x));case 'zipf':return rank**(-exponent);case 'triangular':return n===1?1:Math.max(0,1-Math.abs(i-center*(n-1))/Math.max(1,spread*(n-1)));case 'custom':return selection.weights[i];}
  });
- const total=raw.reduce((a,b)=>a+b,0);if(!total&&fbs?.used.length)throw Error("The active FBS relations leave no selectable ingredient. Edit the relations or probabilities.");
+ const total=raw.reduce((a,b)=>a+b,0);
   if(!total)throw Error("At least one item must have a positive weight.");return raw.map(w=>w/total);
 }
 export function validate(s){

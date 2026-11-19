@@ -1,4 +1,4 @@
-import {normalize,validate,generate} from './engine.mjs?v=e699497a03c4';
+import {normalize,validate,generate} from './engine.mjs?v=793229fe8aae';
 export function transferKey(language="nl"){return 'breaking-prompt-transfer-'+(language==="en"?"en":"nl");}
 export function validateTransfer(payload){
  if(!payload||payload.version!==1||!payload.system||!payload.baselineSystem)throw Error("Invalid transfer. Analyse your text again.");
