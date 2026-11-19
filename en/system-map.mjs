@@ -1,5 +1,5 @@
-import {selectionPresetName} from './weights.mjs?v=9c9afaef1237';
-import {distribution,generate} from './engine.mjs?v=9c9afaef1237';
+import {selectionPresetName} from './weights.mjs?v=132db420cbb6';
+import {distribution,generate} from './engine.mjs?v=132db420cbb6';
 export function mapData(system){const result=generate(system);return {collections:system.groups.map((group,i)=>({label:system.labels[i],items:group.map((text,index)=>({text,index,probability:distribution(group,system.selections[i])[index]}))})),rule:structuredClone(system.rule),relations:structuredClone(system.relations||[]),relationsEnabled:system.relationsEnabled===true,outputs:result.lines.slice(0,2),combinations:result.lines.slice(0,2).map((_,i)=>result.trace.filter(draw=>draw.row===i+1).map(draw=>({group:draw.group,item:draw.item})))};}
 export function renderSystemMap(root,system,{sourceLength=0,onSelect=()=>{},onEdit=()=>{},onWeight=()=>{},onSelection=()=>{},outcomesRoot=null}={}){
  const data=mapData(system),weightNodes=[[],[],[]],selectionNodes=[],doc=root.ownerDocument;const el=(tag,cls,text)=>{const node=doc.createElement(tag);if(cls)node.className=cls;if(text!==undefined)node.textContent=text;return node;};

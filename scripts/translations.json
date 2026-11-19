@@ -811,5 +811,9 @@
   "wortels": "roots",
   "stroming": "current",
   "De volledige prompt staat hieronder. Je tekst en ontwerpuitdaging worden automatisch ingevuld. Kopieer de prompt naar ChatGPT en plak het antwoord terug.": "The complete prompt is below. Your text and design challenge are filled in automatically. Copy the prompt into ChatGPT and paste the answer back.",
-  "[PLAK HIER JE TEKST]": "[PASTE YOUR TEXT HERE]"
+  "[PLAK HIER JE TEKST]": "[PASTE YOUR TEXT HERE]",
+  "Collectie → Selectie → Verbinding": "Collection → Selection → Connection",
+  "Verander een collectie, selectiemethode of verbinding. Vergelijk wat er ontstaat.": "Change a collection, selection method or connection. Compare what emerges.",
+  "Maak verzamelingen uit je tekst. Pas selectie en verbinding aan; neem je systeem mee naar oefening 1.": "Extract collections from your text. Adjust selection and connection; transfer your system to exercise 1.",
+  "Eigen reflectie · Wat neem je mee? Wat zou je anders doen?": "Your reflection · What will you take away? What would you do differently?"
 }

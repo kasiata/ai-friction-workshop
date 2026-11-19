@@ -1,5 +1,5 @@
-import {unexpectedDefaults,distribution} from './engine.mjs?v=9c9afaef1237';
-import {chanceSelection,presetSelection,selectionPresetName} from './weights.mjs?v=9c9afaef1237';
+import {unexpectedDefaults,distribution} from './engine.mjs?v=132db420cbb6';
+import {chanceSelection,presetSelection,selectionPresetName} from './weights.mjs?v=132db420cbb6';
 export function createUnexpectedEditor(collectionRoot,selectionRoot,{onChange=()=>{}}={}){
  const doc=collectionRoot.ownerDocument,el=(tag,text)=>{const n=doc.createElement(tag);if(text!==undefined)n.textContent=text;return n;};let selection=structuredClone(unexpectedDefaults.selection);
  const label=el('label'),toggle=el('input');label.className='check';toggle.type='checkbox';toggle.id='unexpectedEnabled';label.append(toggle,doc.createTextNode('Eigen onverwachte elementen (optioneel)'));

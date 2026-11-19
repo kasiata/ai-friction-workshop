@@ -1,5 +1,5 @@
-import {validateRelations,relationCandidates} from './relations.mjs?v=9c9afaef1237';
-import {fbsGroups,fbsRelations,fbsLabels,fbsTemplate} from './fbs-data.mjs?v=9c9afaef1237';
+import {validateRelations,relationCandidates} from './relations.mjs?v=132db420cbb6';
+import {fbsGroups,fbsRelations,fbsLabels,fbsTemplate} from './fbs-data.mjs?v=132db420cbb6';
 export const selectionDefaults={model:'uniform',center:0.5,spread:0.2,rate:2,exponent:1.2,direction:'start',weights:[]};
 export const models={uniform:'Uniform',normal:'Normaal',exponential:'Exponentieel',zipf:'Zipf',triangular:'Driehoek',custom:'Eigen gewichten'};
 export const unexpectedDefaults={enabled:false,items:['de plek moet elke dag van locatie veranderen','deelnemers mogen de eerste minuut niet praten','iedere bezoeker verandert één onderdeel voor de volgende','één onderdeel moet van ijs zijn','het ontwerp werkt alleen als twee onbekenden samenwerken'],selection:structuredClone(selectionDefaults)};

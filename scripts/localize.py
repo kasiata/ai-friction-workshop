@@ -47,7 +47,7 @@ for lang in ['nl','en']:
             text=text.replace("GitHub-adres: vul hier het adres van de oefening in","Workshop address: enter the exercise URL here")
         text=text.replace('href="fonts.css"','href="../fonts.css?v='+REV+'"').replace('href="style.css"','href="../style.css?v='+REV+'"').replace('src="assets/','src="../assets/')
         pdf='worksheet-a4-en.pdf' if lang=='en' else 'werkblad-a4.pdf'
-        text=text.replace('href="werkblad-a4.pdf"','href="../'+pdf+'"')
+        text=text.replace('href="werkblad-a4.pdf"','href="../'+pdf+'?v='+REV+'"')
         other='nl' if lang=='en' else 'en';label='NL' if lang=='en' else 'ENG'
         switch=f'<a class="language-switch" href="../{other}/{name}" lang="{other}">{label}</a>'
         if '<nav>' in text:text=text.replace('<nav>','<nav>'+switch,1)
