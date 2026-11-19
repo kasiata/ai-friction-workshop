@@ -1,6 +1,6 @@
-import {generationSeed} from './randomness.mjs?v=f801ab4c1c3b';
-import {takeTransfer} from './transfer.mjs?v=f801ab4c1c3b';
-import {defaults,normalize,validate,generate,distribution,models} from './engine.mjs?v=f801ab4c1c3b';
+import {generationSeed} from './randomness.mjs?v=8e0f9243102d';
+import {takeTransfer} from './transfer.mjs?v=8e0f9243102d';
+import {defaults,normalize,validate,generate,distribution,models} from './engine.mjs?v=8e0f9243102d';
 const $=id=>document.getElementById(id);let current=null,baseline=null,count=0;const isSecond=document.body.dataset.exercise==='2';const key=isSecond?'breaking-prompt-ex2-system-en':'breaking-prompt-v2-en';
 const list=text=>text.split('\n').map(x=>x.trim()).filter(Boolean);
 function read(){return {version:3,challenge:$('challenge').value,labels:[0,1,2].map(i=>$('label'+i).value),groups:[0,1,2].map(i=>list($('g'+i).value)),selections:[0,1,2].map(readSelection),recipe:'abc',template:$('template').value,rule:{enabled:$('ruleEnabled').checked,trigger:$('ruleTrigger').value,allowed:list($('ruleAllowed').value)},lines:Number($('lines').value),fixedRandomness:$('fixedRandomness').checked,seed:Number($('seed').value)};}
