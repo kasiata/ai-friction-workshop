@@ -1,11 +1,11 @@
-import {createUnexpectedEditor} from './unexpected-editor.mjs?v=86cc2ddaa7c5';
-import {chanceSelection,presetSelection,selectionPresetName} from './weights.mjs?v=86cc2ddaa7c5';
-import {createRelationEditor} from './relation-editor.mjs?v=86cc2ddaa7c5';
-import {generationSeed} from './randomness.mjs?v=86cc2ddaa7c5';
-import {takeTransfer} from './transfer.mjs?v=86cc2ddaa7c5';
-import {workshopDefaults as defaults,previousWorkshopTemplate,fbsDefaults,normalize,validate,generate,distribution,models} from './engine.mjs?v=86cc2ddaa7c5';
+import {createUnexpectedEditor} from './unexpected-editor.mjs?v=9c9afaef1237';
+import {chanceSelection,presetSelection,selectionPresetName} from './weights.mjs?v=9c9afaef1237';
+import {createRelationEditor} from './relation-editor.mjs?v=9c9afaef1237';
+import {generationSeed} from './randomness.mjs?v=9c9afaef1237';
+import {takeTransfer} from './transfer.mjs?v=9c9afaef1237';
+import {workshopDefaults as defaults,previousWorkshopTemplate,fbsDefaults,normalize,validate,generate,distribution,models} from './engine.mjs?v=9c9afaef1237';
 const $=id=>document.getElementById(id);let current=null,baseline=null,count=0;const isSecond=document.body.dataset.exercise==='2';const key=isSecond?'breaking-prompt-ex2-system':'breaking-prompt-v2';
-const unexpectedEditor=createUnexpectedEditor($('unexpectedCollection'),$('unexpectedSelection'),{onChange:()=>{if(current)run();},getGroups:()=>[0,1,2].map(i=>$('g'+i).value.split('\n').filter(Boolean))});
+const unexpectedEditor=createUnexpectedEditor($('unexpectedCollection'),$('unexpectedSelection'),{onChange:()=>{if(current)run();}});
 const relationEditor=createRelationEditor($('relationRows'),{groups:()=>[0,1,2].map(i=>list($('g'+i).value)),onChange:()=>changed()});
 $('addRelation').onclick=()=>relationEditor.add();
 let activeFramework='custom';
@@ -14,7 +14,6 @@ function read(){return {version:3,unexpected:unexpectedEditor.read(),challenge:$
 function readSelection(i){return {model:$('model'+i).value,center:Number($('center'+i).value)/100,spread:Number($('spread'+i).value),rate:Number($('rate'+i).value),exponent:Number($('exponent'+i).value),direction:$('direction'+i).value,weights:list($('custom'+i).value).map(x=>Number(x.replace(',','.')))};}
 const descriptions={uniform:'Elke regel krijgt dezelfde kans.',normal:'Een discrete klokcurve rond de piek. Een kleinere breedte concentreert de kans.',exponential:'De kans neemt exponentieel af vanaf het gekozen uiteinde.',zipf:'De kans volgt 1 / rang^exponent. Een hogere exponent versterkt de voorkeur.',triangular:'De kans daalt lineair aan weerszijden van de piek. Buiten de driehoek is de kans 0.',custom:'Bepaal zelf de verhouding tussen de kansen van de items.'};
 function update(){
- unexpectedEditor.refresh();
  $('typedConnections').hidden=activeFramework!=='fbs';
  $('relationChanceNotice').hidden=!$('relationsEnabled').checked;$('random').disabled=!$('fixedRandomness').checked;$('ruleFields').hidden=!$('ruleEnabled').checked;
  $('bItems').replaceChildren(...list($('g1').value).map(x=>{const o=document.createElement('option');o.value=x;return o;}));

@@ -1,5 +1,5 @@
-import {validateRelations,relationCandidates} from './relations.mjs?v=86cc2ddaa7c5';
-import {fbsGroups,fbsRelations,fbsLabels,fbsTemplate} from './fbs-data.mjs?v=86cc2ddaa7c5';
+import {validateRelations,relationCandidates} from './relations.mjs?v=9c9afaef1237';
+import {fbsGroups,fbsRelations,fbsLabels,fbsTemplate} from './fbs-data.mjs?v=9c9afaef1237';
 export const selectionDefaults={model:'uniform',center:0.5,spread:0.2,rate:2,exponent:1.2,direction:'start',weights:[]};
 export const models={uniform:"Uniform",normal:"Normal",exponential:"Exponential",zipf:'Zipf',triangular:"Triangular",custom:"Custom weights"};
 export const unexpectedDefaults={enabled:false,items:["the place must move to a different location every day","participants cannot speak for the first minute","each visitor changes one element for the next visitor","one element must be made of ice","the design only works when two strangers cooperate"],selection:structuredClone(selectionDefaults)};
@@ -11,8 +11,9 @@ export function upgradeTemplate(template){if([previousWorkshopTemplate,"Arrange 
 export function normalize(s){
  if(!s) return structuredClone(defaults);
  const {mode,weights,...rest}=s;
+ const unexpected=structuredClone(s.unexpected||unexpectedDefaults);delete unexpected.association;
  const selections=s.selections||s.groups?.map((g,i)=>({...structuredClone(selectionDefaults),...(mode==='first'||mode==='rising'?{model:'custom',weights:g.map((_,j)=>mode==='first'?(j===0?weights?.[i]||1:1):j+1)}:{})}));
- return {...structuredClone(defaults),...rest,version:3,selections,framework:s.framework||'custom',relations:s.relations||[],relationsEnabled:s.relationsEnabled===true,labels:s.labels||["Collection A","Collection B","Collection C"],template:upgradeTemplate(s.template||'{A} {B} {C}'),rule:s.rule||{enabled:false,trigger:'',allowed:[]}};
+ return {...structuredClone(defaults),...rest,unexpected,version:3,selections,framework:s.framework||'custom',relations:s.relations||[],relationsEnabled:s.relationsEnabled===true,labels:s.labels||["Collection A","Collection B","Collection C"],template:upgradeTemplate(s.template||'{A} {B} {C}'),rule:s.rule||{enabled:false,trigger:'',allowed:[]}};
 }
 export function distribution(group,selection){
  if(!group.length)throw Error("Add at least one item.");
@@ -31,7 +32,7 @@ export function distribution(group,selection){
   if(!total)throw Error("At least one item must have a positive weight.");return raw.map(w=>w/total);
 }
 export function validate(s){
- if(s?.unexpected!==undefined){const u=s.unexpected;const a=u?.association;if(a&&a.enabled&&(typeof a.source!=='string'||a.source.length>500||!Array.isArray(a.chain)||a.chain.length!==4||a.chain.some(word=>typeof word!=='string'||!word.trim()||word.length>80)||typeof a.detail!=='string'||!a.detail.trim()||a.detail.length>1000))throw Error("Use a starting word, three association steps and a short design sentence.");if(!u||typeof u.enabled!=='boolean'||!u.selection||!Object.hasOwn(models,u.selection.model)||!Array.isArray(u.items)||u.items.length>100||u.items.some(item=>typeof item!=='string'||!item.trim()||item.length>500))throw Error("Use up to 100 unexpected elements, each up to 500 characters.");if(u.enabled&&!u.items.length)throw Error("Add at least one unexpected element.");if(u.items.length)distribution(u.items,u.selection);}
+ if(s?.unexpected!==undefined){const u=s.unexpected;if(!u||typeof u.enabled!=='boolean'||!u.selection||!Object.hasOwn(models,u.selection.model)||!Array.isArray(u.items)||u.items.length>100||u.items.some(item=>typeof item!=='string'||!item.trim()||item.length>500))throw Error("Use up to 100 unexpected elements, each up to 500 characters.");if(u.enabled&&!u.items.length)throw Error("Add at least one unexpected element.");if(u.items.length)distribution(u.items,u.selection);}
  if(!s||!Array.isArray(s.groups)||s.groups.length!==3||s.groups.some(g=>!Array.isArray(g)||g.length>300||g.some(x=>typeof x!=='string'||!x.trim()||x.length>500)))throw Error("Use three collections with no more than 300 non-empty items each.");
  if(s.groups.some(g=>!g.length))throw Error("Fill each collection with at least one item.");
  if(!['abc','cba',"echo"].includes(s.recipe)||!Number.isInteger(s.lines)||s.lines<1||s.lines>12||!Number.isInteger(s.seed)||s.seed<0||s.seed>4294967295)throw Error("Check the recipe, number of proposals and seed.");
@@ -61,7 +62,7 @@ export function generate(s){
   trace.push({row,group:i,index:choice.index,item:choice.item,probability:choice.weight/total,restricted,relations:(fbs?.used||[]).map(r=>({type:r.type,from:r.from.item,to:r.to.item})),model:s.selections[i].model});return choice.item;
  }
  let previous='';for(let row=1;row<=s.lines;row++){const a=pick(s.groups[0],0,row),b=pick(s.groups[1],1,row,false,[a]),restricted=s.rule.enabled&&b===s.rule.trigger,c=pick(s.groups[2],2,row,restricted,[a,b]);const values={A:s.recipe==="echo"&&row>1?previous:a,B:b,C:c};const template=s.recipe==='cba'?'{C} {B} {A}':s.template;lines.push(template.replace(/\{([ABC])\}/g,(_,key)=>values[key]));previous=c;}
- if(s.unexpected?.association?.enabled){const detail=s.unexpected.association.detail.trim();for(let i=0;i<lines.length;i++)lines[i]=detail.replace(/[.!?]+$/,'')+'. '+lines[i];}
+
  if(s.unexpected?.enabled){
   const probabilities=distribution(s.unexpected.items,s.unexpected.selection),surprises=[];let u=(Number(s.seed)^0x9e3779b9)>>>0;
   for(let row=1;row<=lines.length;row++){u=(u+0x6D2B79F5)>>>0;let n=Math.imul(u^u>>>15,u|1);n^=n+Math.imul(n^n>>>7,n|61);let r=((n^n>>>14)>>>0)/4294967296,index=probabilities.findLastIndex(p=>p>0);for(let i=0;i<probabilities.length;i++){r-=probabilities[i];if(r<0){index=i;break;}}const item=s.unexpected.items[index];lines[row-1]="Unexpected element: "+item.replace(/[.!?]+$/,'')+'. '+lines[row-1];surprises.push({row,index,item,probability:probabilities[index]});}

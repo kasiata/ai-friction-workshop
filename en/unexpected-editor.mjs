@@ -1,13 +1,7 @@
-import {associateThree,associationStarts} from './associations.mjs?v=86cc2ddaa7c5';
-import {unexpectedDefaults,distribution} from './engine.mjs?v=86cc2ddaa7c5';
-import {chanceSelection,presetSelection,selectionPresetName} from './weights.mjs?v=86cc2ddaa7c5';
-export function createUnexpectedEditor(collectionRoot,selectionRoot,{onChange=()=>{},getGroups=()=>[]}={}){
- const doc=collectionRoot.ownerDocument,el=(tag,text)=>{const n=doc.createElement(tag);if(text!==undefined)n.textContent=text;return n;};let selection=structuredClone(unexpectedDefaults.selection),association=null,sourceEdited=false;
- const wild=el('section'),wildTitle=el('h3',"Randomness · 3 associations"),sourceLabel=el('label',"Starting word"),source=el('input'),choices=el('datalist'),button=el('button','Randomness ↝'),clear=el('button',"Clear association"),chain=el('p'),status=el('p');wild.className='association-panel';source.id='associationSource';source.maxLength=500;sourceLabel.htmlFor=source.id;source.setAttribute('list','associationWords');choices.id='associationWords';button.id='associationRandom';button.type='button';button.className='primary';clear.type='button';clear.className='quiet';chain.id='associationChain';chain.className='association-chain';status.className='hint';const actions=el('div');actions.className='association-actions';actions.append(button,clear);wild.append(wildTitle,sourceLabel,source,choices,actions,chain,status);collectionRoot.append(wild);
- source.oninput=()=>sourceEdited=true;
- function refresh(){const words=[...new Set([...getGroups().flat(),...associationStarts()])];choices.replaceChildren(...words.map(word=>{const option=el('option');option.value=word;return option;}));if(!sourceEdited&&!association?.enabled)source.value=getGroups().flat()[0]||words[0]||'';}
- function showAssociation(){clear.hidden=!association?.enabled;chain.textContent=association?.enabled?association.chain.join(' → '):'';}
- button.onclick=()=>{try{association=associateThree(source.value,()=>crypto.getRandomValues(new Uint32Array(1))[0]/4294967296,association);toggle.checked=false;status.textContent="The final element gets a concrete role in the proposal.";showAssociation();update();onChange();}catch(error){status.textContent=error.message;}};clear.onclick=()=>{association=null;status.textContent='';showAssociation();onChange();};
+import {unexpectedDefaults,distribution} from './engine.mjs?v=9c9afaef1237';
+import {chanceSelection,presetSelection,selectionPresetName} from './weights.mjs?v=9c9afaef1237';
+export function createUnexpectedEditor(collectionRoot,selectionRoot,{onChange=()=>{}}={}){
+ const doc=collectionRoot.ownerDocument,el=(tag,text)=>{const n=doc.createElement(tag);if(text!==undefined)n.textContent=text;return n;};let selection=structuredClone(unexpectedDefaults.selection);
  const label=el('label'),toggle=el('input');label.className='check';toggle.type='checkbox';toggle.id='unexpectedEnabled';label.append(toggle,doc.createTextNode("Your own unexpected elements (optional)"));
  const fields=el('div'),help=el('p',"An extra collection of surprises or constraints. One element is added to each proposal.");help.className='hint';const itemLabel=el('label',"Unexpected elements · one per line"),items=el('textarea');items.id='unexpectedItems';items.rows=5;itemLabel.htmlFor=items.id;fields.append(help,itemLabel,items);collectionRoot.append(label,fields);
  const heading=el('h3',"★ Unexpected element"),methodLabel=el('label',"Selection method"),method=el('select');method.id='unexpectedPreset';methodLabel.htmlFor=method.id;
@@ -29,6 +23,6 @@ export function createUnexpectedEditor(collectionRoot,selectionRoot,{onChange=()
  method.onchange=()=>{selection=presetSelection(method.value,selection);update();onChange();};
  items.oninput=()=>{const group=list(),previous=[...sliders.children].map(row=>row.dataset.item);if(selection.model==='custom'){selection={...selection,weights:group.map(text=>{const index=previous.indexOf(text);return index>=0?selection.weights[index]:1;})};if(selection.weights.length&&!selection.weights.some(w=>w>0))selection.weights=selection.weights.map(()=>1);}update();onChange();};
  for(const root of [collectionRoot,selectionRoot])root.addEventListener('input',event=>event.stopPropagation());
- function set(value){const next=value||unexpectedDefaults;toggle.checked=next.enabled;items.value=next.items.join('\n');selection=structuredClone(next.selection);association=next.association||null;if(association?.source)source.value=association.source;showAssociation();refresh();update();}
- set();return {read:()=>({enabled:toggle.checked,items:list(),selection:structuredClone(selection),...(association?{association:structuredClone(association)}:{})}),set,refresh};
+ function set(value){const next=value||unexpectedDefaults;toggle.checked=next.enabled;items.value=next.items.join('\n');selection=structuredClone(next.selection);update();}
+ set();return {read:()=>({enabled:toggle.checked,items:list(),selection:structuredClone(selection)}),set};
 }
