@@ -1,7 +1,7 @@
-import {createRelationEditor} from './relation-editor.mjs?v=69db5fde08ff';
-import {generationSeed} from './randomness.mjs?v=69db5fde08ff';
-import {takeTransfer} from './transfer.mjs?v=69db5fde08ff';
-import {fbsDefaults as defaults,defaults as legacyDefaults,normalize,validate,generate,distribution,models} from './engine.mjs?v=69db5fde08ff';
+import {createRelationEditor} from './relation-editor.mjs?v=dfb8862ba839';
+import {generationSeed} from './randomness.mjs?v=dfb8862ba839';
+import {takeTransfer} from './transfer.mjs?v=dfb8862ba839';
+import {fbsDefaults as defaults,defaults as legacyDefaults,normalize,validate,generate,distribution,models} from './engine.mjs?v=dfb8862ba839';
 const $=id=>document.getElementById(id);let current=null,baseline=null,count=0;const isSecond=document.body.dataset.exercise==='2';const key=isSecond?'breaking-prompt-ex2-system-en':'breaking-prompt-v2-en';
 const relationEditor=createRelationEditor($('relationRows'),{groups:()=>[0,1,2].map(i=>list($('g'+i).value)),onChange:()=>changed()});
 $('addRelation').onclick=()=>relationEditor.add();

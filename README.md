@@ -77,3 +77,6 @@ FBS exploration cards can substitute a structure, substitute a behaviour, or dis
 
 ## Direct weight sliders
 Each ingredient in the Exercise 2 system map now has a native mouse/touch/keyboard slider. Sliders adjust relative weights; probability labels, other ingredients in that collection and generated possibilities update together. The slider element is preserved during dragging, so successive input events do not interrupt the gesture. Values that leave no selectable ingredient are rejected and the slider returns to its previous value. Quote selection remains on the ingredient name. Text/name changes remain in a separate expandable editor. Reviewed weights are preserved in the Exercise 1 transfer.
+
+## Designer-facing result view
+Exercise 2 now places its live design text in a sticky panel beside the ingredient sliders. On smaller screens a compact single-result panel stays above the controls. Slider updates preserve the drag target and refresh this panel in place. The technical relation list is removed from the map; its controls remain under an optional plain-language connection section. Small design experiments are optional, collapsed by default, and do not gate transfer to Exercise 1. The direct path is text → slide and observe → use in Exercise 1. FBS theory remains available in Vocabulary.
