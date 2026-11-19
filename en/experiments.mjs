@@ -1,6 +1,6 @@
-import {relationLabel} from './relations.mjs?v=f284fc9fa3fa';
+import {relationLabel} from './relations.mjs?v=d7c70da0df61';
 export const relationKey=r=>JSON.stringify([r.type,r.from.group,r.from.item,r.to.group,r.to.item]);
-import {validate,distribution,generate} from './engine.mjs?v=f284fc9fa3fa';
+import {validate,distribution,generate} from './engine.mjs?v=d7c70da0df61';
 export function validateExperiments(items){
  if(items==null)return [];
  if(!Array.isArray(items)||items.length>3)throw Error("Use no more than three experiment suggestions.");

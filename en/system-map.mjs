@@ -1,9 +1,9 @@
-import {selectionPresetName} from './weights.mjs?v=f284fc9fa3fa';
-import {distribution,generate} from './engine.mjs?v=f284fc9fa3fa';
+import {selectionPresetName} from './weights.mjs?v=d7c70da0df61';
+import {distribution,generate} from './engine.mjs?v=d7c70da0df61';
 export function mapData(system){const result=generate(system);return {collections:system.groups.map((group,i)=>({label:system.labels[i],items:group.map((text,index)=>({text,index,probability:distribution(group,system.selections[i])[index]}))})),rule:structuredClone(system.rule),relations:structuredClone(system.relations||[]),relationsEnabled:system.relationsEnabled===true,outputs:result.lines.slice(0,2),combinations:result.lines.slice(0,2).map((_,i)=>result.trace.filter(draw=>draw.row===i+1).map(draw=>({group:draw.group,item:draw.item})))};}
-export function renderSystemMap(root,system,{sourceLength=0,onSelect=()=>{},onEdit=()=>{},onWeight=()=>{},onSelection=()=>{}}={}){
+export function renderSystemMap(root,system,{sourceLength=0,onSelect=()=>{},onEdit=()=>{},onWeight=()=>{},onSelection=()=>{},outcomesRoot=null}={}){
  const data=mapData(system),weightNodes=[[],[],[]],selectionNodes=[],doc=root.ownerDocument;const el=(tag,cls,text)=>{const node=doc.createElement(tag);if(cls)node.className=cls;if(text!==undefined)node.textContent=text;return node;};
- root.replaceChildren();const controls=el('div','map-controls');root.append(controls);const source=el('div','map-source');source.append(el('strong','',"Source text"),el('span','hint',sourceLength.toLocaleString('en-GB')+" characters"));controls.append(source,el('div','map-branches'));
+ root.replaceChildren();const controls=el('div','map-controls');root.append(controls);
  const groups=el('div','map-collections');
  data.collections.forEach((c,i)=>{const section=el('section','map-collection'),heading=el('div','map-collection-heading');heading.append(el('span','map-letter',['A','B','C'][i]),el('h3','',c.label));section.append(heading);
   const method=el('label','map-selection-label',"Selection from this collection"),select=el('select','map-selection');select.id='map-selection-'+i;method.htmlFor=select.id;
@@ -13,7 +13,7 @@ export function renderSystemMap(root,system,{sourceLength=0,onSelect=()=>{},onEd
   c.items.slice(0,6).forEach(item=>section.append(addItem(item)));if(c.items.length>6){const more=el('details','map-more');more.append(el('summary','',String(c.items.length-6)+" more"));c.items.slice(6).forEach(item=>more.append(addItem(item)));section.append(more);}groups.append(section);
  });controls.append(groups);
  const chance=el('p','map-note',"Choose a selection method or set chances with the sliders. Each collection totals 100%. Click an item for its source.");controls.append(chance);
- const outputs=el('section','map-outcomes');outputs.append(el('h3','',"Selected → combined"),el('p','live-result-hint',"One item from each collection forms a combination."));const proposals=el('div','map-output-grid');data.outputs.forEach(text=>proposals.append(el('p','',text)));outputs.append(proposals,el('p','live-result-footnote',"A small adjustment may produce the same text."));root.append(outputs);
+ const outputs=el('section','map-outcomes');outputs.append(el('h3','',"Outcome"),el('p','live-result-hint',"One item from each collection forms a combination."));const proposals=el('div','map-output-grid');data.outputs.forEach(text=>proposals.append(el('p','',text)));outputs.append(proposals,el('p','live-result-footnote',"A small adjustment may produce the same text."));if(outcomesRoot)outcomesRoot.replaceChildren(outputs);else root.append(outputs);
  const update=next=>{const updated=mapData(next);updated.collections.forEach((c,i)=>{selectionNodes[i].value=selectionPresetName(next.selections[i]);c.items.forEach((item,j)=>{const ref=weightNodes[i][j];if(!ref)return;const percentage=(item.probability*100).toLocaleString('en-GB',{maximumFractionDigits:1})+'%';ref.value.textContent=percentage;ref.bar.style.width=(item.probability*100)+'%';ref.slider.value=String(Number((item.probability*100).toFixed(1)));ref.slider.setAttribute('aria-valuetext',percentage+" probability");});});proposals.replaceChildren(...updated.outputs.map((text,index)=>{const proposal=el('p'),combination=el('span','selected-combination');updated.combinations[index].forEach(draw=>combination.append(el('span','',['A','B','C'][draw.group]+' · '+draw.item)));proposal.append(combination,el('span','',text));return proposal;}));};
  update(system);return {update};
 }

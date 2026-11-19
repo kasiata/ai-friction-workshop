@@ -1,8 +1,8 @@
-import {chanceSelection,presetSelection,selectionPresetName} from './weights.mjs?v=f284fc9fa3fa';
-import {createRelationEditor} from './relation-editor.mjs?v=f284fc9fa3fa';
-import {generationSeed} from './randomness.mjs?v=f284fc9fa3fa';
-import {takeTransfer} from './transfer.mjs?v=f284fc9fa3fa';
-import {workshopDefaults as defaults,fbsDefaults,normalize,validate,generate,distribution,models} from './engine.mjs?v=f284fc9fa3fa';
+import {chanceSelection,presetSelection,selectionPresetName} from './weights.mjs?v=d7c70da0df61';
+import {createRelationEditor} from './relation-editor.mjs?v=d7c70da0df61';
+import {generationSeed} from './randomness.mjs?v=d7c70da0df61';
+import {takeTransfer} from './transfer.mjs?v=d7c70da0df61';
+import {workshopDefaults as defaults,fbsDefaults,normalize,validate,generate,distribution,models} from './engine.mjs?v=d7c70da0df61';
 const $=id=>document.getElementById(id);let current=null,baseline=null,count=0;const isSecond=document.body.dataset.exercise==='2';const key=isSecond?'breaking-prompt-ex2-system':'breaking-prompt-v2';
 const relationEditor=createRelationEditor($('relationRows'),{groups:()=>[0,1,2].map(i=>list($('g'+i).value)),onChange:()=>changed()});
 $('addRelation').onclick=()=>relationEditor.add();
@@ -30,7 +30,7 @@ function update(){
      const row=document.createElement('div');row.className='probability-row chance-row';row.dataset.item=item;
      const label=document.createElement('label');label.className='probability-label';label.htmlFor='chance-'+i+'-'+j;label.textContent=item;
      const value=document.createElement('output');value.htmlFor=label.htmlFor;
-     const slider=document.createElement('input');slider.type='range';slider.id=label.htmlFor;slider.min='0';slider.max='100';slider.step='0.1';slider.setAttribute('aria-describedby','chanceHelp');slider.disabled=group.length===1;slider.setAttribute('aria-describedby','chanceHelp');
+     const slider=document.createElement('input');slider.type='range';slider.id=label.htmlFor;slider.min='0';slider.max='100';slider.step='0.1';slider.setAttribute('aria-describedby','chanceHelp');slider.disabled=group.length===1;
      slider.oninput=()=>{try{const next=chanceSelection(list($('g'+i).value),readSelection(i),j,Number(slider.value));writeSelection(i,next);update();persist();run();}catch(error){$('error').textContent=error.message;}};
      row.append(label,value,slider);target.append(row);
     });

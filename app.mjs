@@ -30,7 +30,7 @@ function update(){
      const row=document.createElement('div');row.className='probability-row chance-row';row.dataset.item=item;
      const label=document.createElement('label');label.className='probability-label';label.htmlFor='chance-'+i+'-'+j;label.textContent=item;
      const value=document.createElement('output');value.htmlFor=label.htmlFor;
-     const slider=document.createElement('input');slider.type='range';slider.id=label.htmlFor;slider.min='0';slider.max='100';slider.step='0.1';slider.setAttribute('aria-describedby','chanceHelp');slider.disabled=group.length===1;slider.setAttribute('aria-describedby','chanceHelp');
+     const slider=document.createElement('input');slider.type='range';slider.id=label.htmlFor;slider.min='0';slider.max='100';slider.step='0.1';slider.setAttribute('aria-describedby','chanceHelp');slider.disabled=group.length===1;
      slider.oninput=()=>{try{const next=chanceSelection(list($('g'+i).value),readSelection(i),j,Number(slider.value));writeSelection(i,next);update();persist();run();}catch(error){$('error').textContent=error.message;}};
      row.append(label,value,slider);target.append(row);
     });
