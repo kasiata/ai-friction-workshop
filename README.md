@@ -80,3 +80,6 @@ Each ingredient in the Exercise 2 system map now has a native mouse/touch/keyboa
 
 ## Designer-facing result view
 Exercise 2 now places its live design text in a sticky panel beside the ingredient sliders. On smaller screens a compact single-result panel stays above the controls. Slider updates preserve the drag target and refresh this panel in place. The technical relation list is removed from the map; its controls remain under an optional plain-language connection section. Small design experiments are optional, collapsed by default, and do not gate transfer to Exercise 1. The direct path is text → slide and observe → use in Exercise 1. FBS theory remains available in Vocabulary.
+
+## Typography
+The site and printable HTML worksheet use self-hosted Manrope (Latin and Latin Extended, variable weights 200–800). Font files and the SIL Open Font License are under `assets/fonts/`. `fonts.css` declares them without runtime requests to Google. Static PDF downloads retain their embedded print fonts.

@@ -1,5 +1,5 @@
-import {validateRelations,relationCandidates} from './relations.mjs?v=dfb8862ba839';
-import {fbsGroups,fbsRelations,fbsLabels,fbsTemplate} from './fbs-data.mjs?v=dfb8862ba839';
+import {validateRelations,relationCandidates} from './relations.mjs?v=931ef43df2f6';
+import {fbsGroups,fbsRelations,fbsLabels,fbsTemplate} from './fbs-data.mjs?v=931ef43df2f6';
 export const selectionDefaults={model:'uniform',center:0.5,spread:0.2,rate:2,exponent:1.2,direction:'start',weights:[]};
 export const models={uniform:'Uniform',normal:'Normaal',exponential:'Exponentieel',zipf:'Zipf',triangular:'Driehoek',custom:'Eigen gewichten'};
 export const defaults={version:3,framework:'custom',relations:[],relationsEnabled:false,challenge:'Ontwerp een plek op de campus waar onbekenden gemakkelijk een gesprek beginnen.',labels:['Ruimtelijke elementen','Activiteiten','Kwaliteiten'],groups:[['een ronde bank','een verplaatsbare wand','een gedeelde tafel','een beschutte nis','een open podium'],['een persoonlijk verhaal delen','samen iets bouwen','eten delen','een vraag uitwisselen','samen tekenen'],['speels','rustig','verrassend','uitnodigend','energiek']],selections:Array.from({length:3},()=>structuredClone(selectionDefaults)),recipe:'abc',template:'Een plek met {A}, waar mensen {B}. De sfeer is {C}.',rule:{enabled:false,trigger:'een persoonlijk verhaal delen',allowed:['rustig','uitnodigend']},lines:4,seed:42};

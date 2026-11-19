@@ -4,7 +4,7 @@ from html.parser import HTMLParser
 import html,json,re,hashlib
 ROOT=Path(__file__).resolve().parent.parent
 D=json.loads((ROOT/'scripts/translations.json').read_text())
-REV=hashlib.sha256(b''.join((ROOT/name).read_bytes() for name in ['app.mjs','exercise2.mjs','transfer.mjs','randomness.mjs','experiments.mjs','system-map.mjs','weights.mjs','relations.mjs','relation-editor.mjs','fbs-data.mjs','fbs-analysis.mjs','fbs-prompt.mjs','example.mjs','begrippen.html','style.css','workshop.html','oefening-2.html','werkblad.html','scripts/translations.json'])).hexdigest()[:12]
+REV=hashlib.sha256(b''.join((ROOT/name).read_bytes() for name in ['app.mjs','exercise2.mjs','transfer.mjs','randomness.mjs','experiments.mjs','system-map.mjs','weights.mjs','relations.mjs','relation-editor.mjs','fbs-data.mjs','fbs-analysis.mjs','fbs-prompt.mjs','example.mjs','begrippen.html','style.css','fonts.css','workshop.html','oefening-2.html','werkblad.html','scripts/translations.json'])).hexdigest()[:12]
 
 def js(source):
     # Translate full template literals before their individual string components.
@@ -45,7 +45,7 @@ for lang in ['nl','en']:
         if lang=='en':
             parser=Translate();parser.feed(text);text=''.join(parser.out).replace('lang="nl"','lang="en"')
             text=text.replace("GitHub-adres: vul hier het adres van de oefening in","Workshop address: enter the exercise URL here")
-        text=text.replace('href="style.css"','href="../style.css?v='+REV+'"').replace('src="assets/','src="../assets/')
+        text=text.replace('href="fonts.css"','href="../fonts.css?v='+REV+'"').replace('href="style.css"','href="../style.css?v='+REV+'"').replace('src="assets/','src="../assets/')
         pdf='worksheet-a4-en.pdf' if lang=='en' else 'werkblad-a4.pdf'
         text=text.replace('href="werkblad-a4.pdf"','href="../'+pdf+'"')
         other='nl' if lang=='en' else 'en';label='NL' if lang=='en' else 'ENG'
@@ -73,4 +73,5 @@ print('Generated English and Dutch exercises, runtime messages and worksheets.')
 # Version language entry URLs too, so a language choice requests fresh page HTML.
 entry=(ROOT/'index.html').read_text()
 entry=re.sub(r'href="(en|nl)/(?:\?v=[a-f0-9]+)?"',lambda m:'href="'+m.group(1)+'/?v='+REV+'"',entry)
+entry=re.sub(r'href="fonts\.css(?:\?v=[^"]*)?"',lambda m:'href="fonts.css?v='+REV+'"',entry)
 (ROOT/'index.html').write_text(entry)
