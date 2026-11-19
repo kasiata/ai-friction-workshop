@@ -1,4 +1,4 @@
-import {validate,distribution,generate} from './engine.mjs?v=931ef43df2f6';
+import {validate,distribution,generate} from './engine.mjs?v=e699497a03c4';
 export function ingredientWeights(system,group){return system.selections[group].model==='custom'?[...system.selections[group].weights]:distribution(system.groups[group],system.selections[group]).map(p=>p*system.groups[group].length);}
 export function setIngredientWeight(system,group,index,weight){
  validate(system);if(!Number.isInteger(group)||group<0||group>2||!Number.isInteger(index)||index<0||index>=system.groups[group].length||!Number.isFinite(weight)||weight<0||weight>1000000)throw Error('Kies een geldig ingrediënt en een gewicht tussen 0 en 1000000.');

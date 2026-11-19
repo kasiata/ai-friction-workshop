@@ -1,6 +1,6 @@
-import {relationLabel} from './relations.mjs?v=931ef43df2f6';
+import {relationLabel} from './relations.mjs?v=e699497a03c4';
 export const relationKey=r=>JSON.stringify([r.type,r.from.group,r.from.item,r.to.group,r.to.item]);
-import {validate,distribution,generate} from './engine.mjs?v=931ef43df2f6';
+import {validate,distribution,generate} from './engine.mjs?v=e699497a03c4';
 export function validateExperiments(items){
  if(items==null)return [];
  if(!Array.isArray(items)||items.length>3)throw Error('Gebruik maximaal drie experimentvoorstellen.');

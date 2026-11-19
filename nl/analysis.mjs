@@ -1,8 +1,8 @@
-import {buildFbsPrompt} from './fbs-prompt.mjs?v=931ef43df2f6';
-import {extractFbs,validateAnalysisRelations} from './fbs-analysis.mjs?v=931ef43df2f6';
-import {validateRelations} from './relations.mjs?v=931ef43df2f6';
-import {validateExperiments,relationKey} from './experiments.mjs?v=931ef43df2f6';
-import {defaults,selectionDefaults,validate} from './engine.mjs?v=931ef43df2f6';
+import {buildFbsPrompt} from './fbs-prompt.mjs?v=e699497a03c4';
+import {extractFbs,validateAnalysisRelations} from './fbs-analysis.mjs?v=e699497a03c4';
+import {validateRelations} from './relations.mjs?v=e699497a03c4';
+import {validateExperiments,relationKey} from './experiments.mjs?v=e699497a03c4';
+import {defaults,selectionDefaults,validate} from './engine.mjs?v=e699497a03c4';
 export const maxSourceLength=50000;
 const stop=new Set(('de het een en of maar want dat dit die deze er hier daar is zijn was waren wordt worden met voor van aan op in om te tot uit bij door over als dan ook nog niet wel geen zich ik je jij we wij ze zij hij haar hem hun ons onze mijn jouw uw the a an and or but that this these those is are was were be been being with for from to at on in by as it its i you we they he she my our your their not no so can could should would has have had do does did').split(' '));
 export function checkSource(source){if(typeof source!=='string'||source.trim().length<20)throw Error('Voer minstens 20 tekens brontekst in.');if(source.length>maxSourceLength)throw Error('Gebruik een fragment van maximaal 50.000 tekens.');return source.trim();}
@@ -22,7 +22,7 @@ export function localAnalysis(source){source=checkSource(source);const tokens=[.
   }
  }
  const fbs=extractFbs(source);
- return {...fbs,method:'local',statistics:{words:ranked(words),cooccurrences:ranked(pairs)},template:'Doel: {A}. Verwacht gedrag: {B}. Verken als structuur: {C}.',rule:null};
+ return {...fbs,method:'local',statistics:{words:ranked(words),cooccurrences:ranked(pairs)},template:'Het voorstel krijgt vorm met {C}. Zo werkt het: {B}. Het beoogde doel is {A}. Test met gebruikers of deze inrichting het verwachte gedrag ondersteunt.',rule:null};
 }
 export function parseAnalysis(text){if(typeof text!=='string'||text.length>250000)throw Error('De analyse is te groot.');const cleaned=text.trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'');let a;try{a=JSON.parse(cleaned);}catch{throw Error('Plak alleen het JSON-antwoord, eventueel met de codeblokmarkeringen.');}
  if(!a||!Array.isArray(a.collections)||a.collections.length!==3)throw Error('De analyse moet precies drie collections bevatten.');

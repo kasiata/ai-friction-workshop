@@ -1,7 +1,7 @@
-import {createRelationEditor} from './relation-editor.mjs?v=931ef43df2f6';
-import {generationSeed} from './randomness.mjs?v=931ef43df2f6';
-import {takeTransfer} from './transfer.mjs?v=931ef43df2f6';
-import {fbsDefaults as defaults,defaults as legacyDefaults,normalize,validate,generate,distribution,models} from './engine.mjs?v=931ef43df2f6';
+import {createRelationEditor} from './relation-editor.mjs?v=e699497a03c4';
+import {generationSeed} from './randomness.mjs?v=e699497a03c4';
+import {takeTransfer} from './transfer.mjs?v=e699497a03c4';
+import {fbsDefaults as defaults,defaults as legacyDefaults,normalize,validate,generate,distribution,models} from './engine.mjs?v=e699497a03c4';
 const $=id=>document.getElementById(id);let current=null,baseline=null,count=0;const isSecond=document.body.dataset.exercise==='2';const key=isSecond?'breaking-prompt-ex2-system-en':'breaking-prompt-v2-en';
 const relationEditor=createRelationEditor($('relationRows'),{groups:()=>[0,1,2].map(i=>list($('g'+i).value)),onChange:()=>changed()});
 $('addRelation').onclick=()=>relationEditor.add();
@@ -41,7 +41,12 @@ for(const el of document.querySelectorAll('.controls input,.controls textarea,.c
 function tab(n){$('instruction').textContent='';$('paperPrompt').textContent="Take one idea onto paper.";}
 window.addEventListener('workshop:load-system',e=>{try{const system=validate(normalize(e.detail.system));const base=validate(normalize(e.detail.baselineSystem||system));const result=generate(base);fill(system);count=0;current=null;baseline={settings:structuredClone(base),result,number:0,label:"Analysis before your changes"};run();$('workspace').scrollIntoView({behavior:'smooth',block:'start'});}catch(error){$('error').textContent=error.message;}});
 $('reset').onclick=()=>{if(!confirm("Start again with the campus challenge and example collections? Your current system and comparison will be cleared."))return;fill(structuredClone(defaults));current=null;baseline=null;count=0;$('comparison').hidden=true;$('trace').replaceChildren();$('output').replaceChildren();$('counter').textContent="No test yet";$('error').textContent='';tab(isSecond?2:1);persist();};
-let saved;try{saved=validate(normalize(JSON.parse(localStorage.getItem(key))));}catch{}if(saved&&saved.framework==='custom'&&JSON.stringify(saved.groups)===JSON.stringify(legacyDefaults.groups)&&JSON.stringify(saved.labels)===JSON.stringify(legacyDefaults.labels)&&saved.template===legacyDefaults.template&&JSON.stringify(saved.selections)===JSON.stringify(legacyDefaults.selections)&&JSON.stringify(saved.rule)===JSON.stringify(legacyDefaults.rule)&&!(saved.relations||[]).length)saved=null;fill(saved||structuredClone(defaults));
+let saved;try{saved=validate(normalize(JSON.parse(localStorage.getItem(key))));}catch{}if(saved&&saved.framework==='custom'&&JSON.stringify(saved.groups)===JSON.stringify(legacyDefaults.groups)&&JSON.stringify(saved.labels)===JSON.stringify(legacyDefaults.labels)&&saved.template===legacyDefaults.template&&JSON.stringify(saved.selections)===JSON.stringify(legacyDefaults.selections)&&JSON.stringify(saved.rule)===JSON.stringify(legacyDefaults.rule)&&!(saved.relations||[]).length)saved=null;let upgradedExample=false;
+// Only upgrade known obsolete examples; keep authored systems and a recoverable backup.
+const obsoleteFragments=saved&&/^(Vertrekpunt:|Starting point:)/.test(saved.template)&&/\{A\}/.test(saved.template)&&/(Bronfragment:|Source fragment:|Verband om te verkennen:|Connection to explore:|Verbinding:|Connection:)/.test(saved.template);
+const obsoleteFbs=saved&&saved.framework==='fbs'&&saved.template==="Goal: {A}. Expected behaviour: {B}. Explore as structure: {C}."&&JSON.stringify(saved.groups[2])===JSON.stringify(["recognisable table sign","shared conversation table","regular host","weekly time slot","quiet individual seat"]);
+if(obsoleteFragments||obsoleteFbs){try{localStorage.setItem(key+'-before-concrete-example',JSON.stringify(saved));saved=null;upgradedExample=true;}catch{}}
+fill(saved||structuredClone(defaults));
 
 tab(isSecond?2:1);
 if(isSecond){if(!saved){try{const first=JSON.parse(localStorage.getItem('breaking-prompt-v2-en'));if(first?.challenge)$('challenge').value=first.challenge;}catch{}}}
@@ -50,3 +55,6 @@ if(!isSecond&&new URLSearchParams(window.location.search).get('from')==='analysi
  try{const transferred=takeTransfer(sessionStorage,document.documentElement.lang);if(transferred){window.dispatchEvent(new CustomEvent('workshop:load-system',{detail:transferred}));$('transferNotice').hidden=false;$('transferNotice').textContent="System from Exercise 2 loaded. You can now generate and compare.";const url=new URL(window.location.href);url.searchParams.delete('from');history.replaceState(null,'',url);}}
  catch(e){$('error').textContent=e.message;}
 }
+
+if(!current)run();
+if(upgradedExample){$('transferNotice').hidden=false;$('transferNotice').textContent="The old word-fragment example has been replaced with a concrete design example. Your previous system is backed up in this browser.";const download=document.createElement('a');download.textContent="Download previous system";download.href=URL.createObjectURL(new Blob([localStorage.getItem(key+'-before-concrete-example')],{type:'application/json'}));download.download='previous-workshop-system.json';$('transferNotice').append(' ',download);}

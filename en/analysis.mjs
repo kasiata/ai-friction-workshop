@@ -1,8 +1,8 @@
-import {buildFbsPrompt} from './fbs-prompt.mjs?v=931ef43df2f6';
-import {extractFbs,validateAnalysisRelations} from './fbs-analysis.mjs?v=931ef43df2f6';
-import {validateRelations} from './relations.mjs?v=931ef43df2f6';
-import {validateExperiments,relationKey} from './experiments.mjs?v=931ef43df2f6';
-import {defaults,selectionDefaults,validate} from './engine.mjs?v=931ef43df2f6';
+import {buildFbsPrompt} from './fbs-prompt.mjs?v=e699497a03c4';
+import {extractFbs,validateAnalysisRelations} from './fbs-analysis.mjs?v=e699497a03c4';
+import {validateRelations} from './relations.mjs?v=e699497a03c4';
+import {validateExperiments,relationKey} from './experiments.mjs?v=e699497a03c4';
+import {defaults,selectionDefaults,validate} from './engine.mjs?v=e699497a03c4';
 export const maxSourceLength=50000;
 const stop=new Set(('de het een en of maar want dat dit die deze er hier daar is zijn was waren wordt worden met voor van aan op in om te tot uit bij door over als dan ook nog niet wel geen zich ik je jij we wij ze zij hij haar hem hun ons onze mijn jouw uw the a an and or but that this these those is are was were be been being with for from to at on in by as it its i you we they he she my our your their not no so can could should would has have had do does did').split(' '));
 export function checkSource(source){if(typeof source!=='string'||source.trim().length<20)throw Error("Enter at least 20 characters of source text.");if(source.length>maxSourceLength)throw Error("Use a source fragment of no more than 50,000 characters.");return source.trim();}
@@ -22,7 +22,7 @@ export function localAnalysis(source){source=checkSource(source);const tokens=[.
   }
  }
  const fbs=extractFbs(source);
- return {...fbs,method:'local',statistics:{words:ranked(words),cooccurrences:ranked(pairs)},template:"Goal: {A}. Expected behaviour: {B}. Explore as structure: {C}.",rule:null};
+ return {...fbs,method:'local',statistics:{words:ranked(words),cooccurrences:ranked(pairs)},template:"Build the proposal around {C}. The intended use: {B}. The aim is {A}. Test with users whether this arrangement supports the expected behaviour.",rule:null};
 }
 export function parseAnalysis(text){if(typeof text!=='string'||text.length>250000)throw Error("The analysis is too large.");const cleaned=text.trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'');let a;try{a=JSON.parse(cleaned);}catch{throw Error("Paste only the JSON response, optionally including code-block markers.");}
  if(!a||!Array.isArray(a.collections)||a.collections.length!==3)throw Error("The analysis must contain exactly three collections.");

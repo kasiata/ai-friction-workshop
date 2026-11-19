@@ -557,5 +557,14 @@
   "Laat ChatGPT de tekst analyseren (optioneel)": "Let ChatGPT analyse the text (optional)",
   "Eerste analyse van je tekst · controleer en vul aan": "A first analysis of your text · review and add to it",
   "EERSTE ANALYSE": "FIRST ANALYSIS",
-  "ANALYSE VAN CHATGPT": "CHATGPT ANALYSIS"
+  "ANALYSE VAN CHATGPT": "CHATGPT ANALYSIS",
+  "een ronde tafel naast de campuskoffiebar, met een bord dat uitnodigt om aan te schuiven en twee extra stoelen": "a round table beside the campus coffee bar, with a sign inviting people to join and two spare chairs",
+  "een gedeelde tafel met gesprekskaartjes; bezoekers kiezen een vraag en nodigen iemand uit om samen te antwoorden": "a shared table with conversation cards; visitors choose a question and invite someone to answer it together",
+  "een open zithoek waar een gastheer of gastvrouw nieuwkomers verwelkomt en aan elkaar voorstelt": "an open seating area where a host welcomes newcomers and introduces them to each other",
+  "een vaste gesprekstafel met een wekelijks inloopmoment; een begeleider ontvangt bezoekers en houdt een stoel vrij": "a regular conversation table with a weekly drop-in session; a facilitator welcomes visitors and keeps a chair free",
+  "een stille individuele zitplek met een eigen leeslamp en een afscheiding van de looproute": "a quiet individual seat with its own reading lamp and a screen separating it from the walkway",
+  "Maak een ontmoetingsplek met {C}. Zo werkt het voorstel: {B}. Het ontwerp beoogt {A}. Test met bezoekers of de inrichting dit gedrag inderdaad uitlokt.": "Create a meeting place with {C}. The intended use: {B}. The design aims for {A}. Test with visitors whether the arrangement encourages this behaviour.",
+  "Het voorstel krijgt vorm met {C}. Zo werkt het: {B}. Het beoogde doel is {A}. Test met gebruikers of deze inrichting het verwachte gedrag ondersteunt.": "Build the proposal around {C}. The intended use: {B}. The aim is {A}. Test with users whether this arrangement supports the expected behaviour.",
+  "Het oude woordfragment-voorbeeld is vervangen door een concreet ontwerpvoorbeeld. Je vorige systeem is als back-up bewaard in deze browser.": "The old word-fragment example has been replaced with a concrete design example. Your previous system is backed up in this browser.",
+  "Download vorig systeem": "Download previous system"
 }

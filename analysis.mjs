@@ -22,7 +22,7 @@ export function localAnalysis(source){source=checkSource(source);const tokens=[.
   }
  }
  const fbs=extractFbs(source);
- return {...fbs,method:'local',statistics:{words:ranked(words),cooccurrences:ranked(pairs)},template:'Doel: {A}. Verwacht gedrag: {B}. Verken als structuur: {C}.',rule:null};
+ return {...fbs,method:'local',statistics:{words:ranked(words),cooccurrences:ranked(pairs)},template:'Het voorstel krijgt vorm met {C}. Zo werkt het: {B}. Het beoogde doel is {A}. Test met gebruikers of deze inrichting het verwachte gedrag ondersteunt.',rule:null};
 }
 export function parseAnalysis(text){if(typeof text!=='string'||text.length>250000)throw Error('De analyse is te groot.');const cleaned=text.trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'');let a;try{a=JSON.parse(cleaned);}catch{throw Error('Plak alleen het JSON-antwoord, eventueel met de codeblokmarkeringen.');}
  if(!a||!Array.isArray(a.collections)||a.collections.length!==3)throw Error('De analyse moet precies drie collections bevatten.');

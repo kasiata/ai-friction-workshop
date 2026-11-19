@@ -19,3 +19,15 @@ test('FBS dependency experiments disable exactly one relationship and detect sta
 test('legacy systems still work and FBS metadata survives analysis import',()=>{assert.doesNotThrow(()=>generate(defaults));const a=localAnalysis(exampleText),imported=parseAnalysis(JSON.stringify({...a,experiments:localExperiments(a)}));assert.equal(imported.framework,'fbs');assert.deepEqual(imported.relations,a.relations);});
 test('English FBS defaults preserve the same selection semantics and English case text',()=>{assert.match(enDefaults.labels[0],/Function/);assert.ok(enExample.split(/\s+/).length>300);assert.match(enExample,/Chatter & Natter/);const a=generate(fresh()),b=generate(enDefaults);assert.deepEqual(a.trace.map(t=>[t.group,t.index,t.probability]),b.trace.map(t=>[t.group,t.index,t.probability]));});
 test('changing behaviour retains function and structure draws when dependencies are deliberately kept',()=>{for(let seed=0;seed<20;seed++){const s=fresh();s.seed=seed;const after=applyExperiment(s,{kind:'replace',title:'Ander gedrag',why:'Houd structuur vast.',collection:1,item:s.groups[1][0],replacement:'bezoekers tekenen samen een openingsvraag'});const a=generate(s).trace,b=generate(after).trace;for(let i=0;i<a.length;i++)if(a[i].group!==1)assert.equal(a[i].item,b[i].item);}});
+
+test('both workshop examples generate a physical proposal with intended use and a test',()=>{
+ for(const s of [fbsDefaults,enDefaults]){
+  const result=generate(s);
+  assert.ok(s.groups[2].every(item=>item.length>70),'structures describe an arrangement, not an isolated keyword');
+  for(const line of result.lines){
+   assert.ok(line.length>220);
+   assert.match(line,/Test/);
+   assert.doesNotMatch(line,/Vertrekpunt:|Bronfragment:|Starting point:|Source fragment:|\{[ABC]\}/);
+  }
+ }
+});
